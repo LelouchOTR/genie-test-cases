@@ -42,14 +42,16 @@ def get_default_sam_header() -> pysam.AlignmentHeader:
     """Creates a basic pysam AlignmentHeader using the default reference."""
     if not REFERENCE_FASTA_PATH.exists():
         raise FileNotFoundError(f"Reference FASTA not found at: {REFERENCE_FASTA_PATH}")
-    # pysam can infer header info from the FASTA
-    # We need to read it to get sequence names and lengths
-    header_dict = {'HD': {'VN': '1.6', 'SO': 'unsorted'}}
-    sq_lines = []
+    
+    # Create header directly from the reference FASTA
     with pysam.FastaFile(str(REFERENCE_FASTA_PATH)) as fasta:
-        for ref_name in fasta.references:
-            sq_lines.append({'LN': fasta.get_reference_length(ref_name), 'SN': ref_name})
-    header_dict['SQ'] = sq_lines
+        references = [(name, fasta.get_reference_length(name)) 
+                     for name in fasta.references]
+    
+    header_dict = {
+        'HD': {'VN': '1.6', 'SO': 'unsorted'},
+        'SQ': [{'SN': name, 'LN': length} for name, length in references]
+    }
     return pysam.AlignmentHeader.from_dict(header_dict)
 
 def copy_reference_to_output(output_dir: Path) -> Path:

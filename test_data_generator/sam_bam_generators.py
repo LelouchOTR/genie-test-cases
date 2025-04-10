@@ -225,7 +225,7 @@ def generate_sam_04(output_dir: Path, **kwargs):
             seq = fasta.fetch("ref1", 50, 50 + read_len).upper()
         r2 = pysam.AlignedSegment()
         r2.query_name = "mapped_se_2"
-        r2.query_sequence = pysam.reverse_complement(seq)
+        r2.query_sequence = seq.translate(str.maketrans('ACGTacgt', 'TGCAtgca'))[::-1]
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         r2.reference_id = header.references.index("ref1")
         r2.reference_start = 50
@@ -683,7 +683,9 @@ def generate_sam_13(output_dir: Path, **kwargs):
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
-    ref_seq = header.fetch(ref_name, 10, 40).upper() # ACGTACGTACGTACGTACGTACGTACGTAC
+    ref_path = utils.copy_reference_to_output(output_dir)
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        ref_seq = fasta.fetch(ref_name, 10, 40).upper() # ACGTACGTACGTACGTACGTACGTACGTAC
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         # Read with M, =, X
@@ -1809,7 +1811,8 @@ def generate_sam_39(output_dir: Path, **kwargs):
         # Add a simple mapped read (similar to generate_sam_04)
         r1 = pysam.AlignedSegment()
         r1.query_name = "bam_input_read_1"
-        r1.query_sequence = header.fetch(ref_name, 0, read_len).upper()
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            r1.query_sequence = fasta.fetch(ref_name, 0, read_len).upper()
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
         r1.reference_id = ref_id
         r1.reference_start = 0
