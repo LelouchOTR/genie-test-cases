@@ -6,13 +6,20 @@ from . import utils # Import utils to access helper functions if needed directly
 
 def main():
     """Generates all configured test data files."""
-    print("Starting test data generation...")
+    print(Fore.CYAN + "\nStarting test data generation...")
     base_output_path = Path(BASE_OUTPUT_DIR)
-    print(f"Output directory: {base_output_path.resolve()}")
+    print(Fore.YELLOW + f"Output directory: {base_output_path.resolve()}")
 
-    generated_count = 0
-    for i, case_config in enumerate(TEST_CASES):
-        print(f"\nProcessing Case {i+1}/{len(TEST_CASES)}: {case_config['name']} ({case_config['id']})")
+    success_count = 0
+    error_count = 0
+    total_cases = len(TEST_CASES)
+    
+    # Create progress bar
+    with tqdm(TEST_CASES, unit="case", 
+             bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.BLUE, Fore.RESET)) as pbar:
+        for case_config in pbar:
+            case_id = case_config['id']
+            pbar.set_description(f"{Fore.WHITE}Processing {case_id}")
 
         # Construct output path: base_dir / format / subdir
         output_dir = base_output_path / case_config['format'] / case_config['output_subdir']
@@ -36,10 +43,10 @@ def main():
                 # Call it with params
                 params = case_config.get('params', {})
                 generator_func(output_dir, **params)
-                generated_count += 1
+                success_count += 1
             except Exception as e:
-                print(f"  ERROR generating data for {case_config['id']}: {e}")
-                # Optionally: raise e # Stop execution on error
+                error_count += 1
+                print(f"{Fore.RED}  ERROR in {case_id}: {str(e)}")
                 continue # Continue to next case
         else:
             print(f"  WARNING: No generator function defined for {case_config['id']}.")
@@ -53,7 +60,11 @@ def main():
             print(f"  ERROR generating README for {case_config['id']}: {e}")
 
 
-    print(f"\nTest data generation complete. Generated data for {generated_count} cases.")
+    # Final summary
+    print(Fore.GREEN + f"\n✅ Successfully generated {success_count}/{total_cases} cases")
+    if error_count > 0:
+        print(Fore.RED + f"❌ Failed to generate {error_count}/{total_cases} cases")
+    print(Style.RESET_ALL)
 
 if __name__ == "__main__":
     # Ensure the script is run from the directory containing generate_tests.py

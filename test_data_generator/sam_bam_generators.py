@@ -1881,7 +1881,9 @@ def generate_sam_41(output_dir: Path, **kwargs):
 
         r2 = pysam.AlignedSegment()
         r2.query_name = "cram_input_read_2"
-        r2.query_sequence = header.fetch(ref_name, 50, 50 + read_len).upper()
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            seq = fasta.fetch(ref_name, 50, 50 + read_len).upper()
+        r2.query_sequence = seq
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         r2.reference_id = ref_id
         r2.reference_start = 50
