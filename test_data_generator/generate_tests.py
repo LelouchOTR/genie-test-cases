@@ -21,11 +21,19 @@ def main():
         utils.ensure_dir(output_dir)
         print(f"  Ensured directory: {output_dir}")
 
-        # Call the specific generator function
-        generator_func = case_config.get('generator_func')
-        if generator_func:
+        # Load and call the specific generator function
+        func_path = case_config.get('generator_func')
+        if func_path:
             try:
-                # Pass output directory and any specific params
+                # Split "module.function" into components
+                module_name, func_name = func_path.rsplit('.', 1)
+                # Dynamically import the module
+                module = __import__(f'test_data_generator.{module_name}',
+                                  fromlist=[func_name])
+                # Get the actual function object
+                generator_func = getattr(module, func_name)
+                
+                # Call it with params
                 params = case_config.get('params', {})
                 generator_func(output_dir, **params)
                 generated_count += 1
