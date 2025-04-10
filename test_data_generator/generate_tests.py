@@ -17,56 +17,50 @@ def main():
     error_count = 0
     total_cases = len(TEST_CASES)
     
-    # Create progress bar
-    with tqdm(TEST_CASES, unit="case", 
-             bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.BLUE, Fore.RESET)) as pbar:
-        for case_config in pbar:
+    # Create a single progress bar
+    with tqdm(total=total_cases, unit="case", 
+             bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.BLUE, Fore.RESET),
+             desc=Fore.WHITE + "Generating") as pbar:
+        for case_config in TEST_CASES:
             case_id = case_config['id']
+            
+            # Update progress bar description with current case
             pbar.set_description(f"{Fore.WHITE}Processing {case_id}")
-
-            # Construct output path: base_dir / format / subdir
+            
             output_dir = base_output_path / case_config['format'] / case_config['output_subdir']
-
-            # Create the directory
             utils.ensure_dir(output_dir)
-            print(f"  Ensured directory: {output_dir}")
 
-            # Load and call the specific generator function
-            func_path = case_config.get('generator_func')
-            if func_path:
-                try:
-                    # Split "module.function" into components
+            try:
+                func_path = case_config.get('generator_func')
+                if func_path:
                     module_name, func_name = func_path.rsplit('.', 1)
-                    # Dynamically import the module
                     module = __import__(f'test_data_generator.{module_name}',
-                                        fromlist=[func_name])
-                    # Get the actual function object
+                                      fromlist=[func_name])
                     generator_func = getattr(module, func_name)
-
-                    # Call it with params
+                    
+                    # Run the generator
                     params = case_config.get('params', {})
                     generator_func(output_dir, **params)
+                    
+                    # Write README after successful generation
+                    utils.write_readme(output_dir, case_config)
                     success_count += 1
-                except Exception as e:
+                else:
                     error_count += 1
-                    print(f"{Fore.RED}  ERROR in {case_id}: {str(e)}")
-                    continue  # Continue to next case  # noqa: F702
-            else:
-                print(f"  WARNING: No generator function defined for {case_config['id']}.")
-                continue  # Skip README generation if no data was attempted  # noqa: F702
-
-            # Write the README file
-        try:
-            utils.write_readme(output_dir, case_config)
-            print(f"  Generated: {output_dir / 'README.md'}")
-        except Exception as e:
-            print(f"  ERROR generating README for {case_config['id']}: {e}")
-
+                    tqdm.write(f"{Fore.RED}  WARNING: No generator for {case_id}")
+                
+            except Exception as e:
+                error_count += 1
+                tqdm.write(f"{Fore.RED}  ERROR in {case_id}: {str(e)}")
+                
+            finally:
+                # Update progress bar by 1 step regardless of success/failure
+                pbar.update(1)
 
     # Final summary
-    print(Fore.GREEN + f"\n✅ Successfully generated {success_count}/{total_cases} cases")
+    tqdm.write(Fore.GREEN + f"\n✅ Success: {success_count}/{total_cases}")
     if error_count > 0:
-        print(Fore.RED + f"❌ Failed to generate {error_count}/{total_cases} cases")
+        tqdm.write(Fore.RED + f"❌ Errors: {error_count}/{total_cases}")
     print(Style.RESET_ALL)
 
 if __name__ == "__main__":
