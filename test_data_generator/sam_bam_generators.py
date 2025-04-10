@@ -737,8 +737,9 @@ def generate_sam_14(output_dir: Path, **kwargs):
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
-    ref_seq_part1 = header.fetch(ref_name, 10, 20).upper() # 10 bases
-    ref_seq_part2 = header.fetch(ref_name, 20, 30).upper() # 10 bases
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        ref_seq_part1 = fasta.fetch(ref_name, 10, 20).upper() # 10 bases
+        ref_seq_part2 = fasta.fetch(ref_name, 20, 30).upper() # 10 bases
     insertion = "NNN" # 3 bases inserted
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
@@ -793,7 +794,8 @@ def generate_sam_16(output_dir: Path, **kwargs):
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
-    ref_match_seq = header.fetch(ref_name, 20, 40).upper() # 20 bases match
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        ref_match_seq = fasta.fetch(ref_name, 20, 40).upper() # 20 bases match
     clip5_seq = "NNNNN" # 5 bases clipped at start
     clip3_seq = "YYYYY" # 5 bases clipped at end
 
@@ -847,8 +849,9 @@ def generate_sam_17(output_dir: Path, **kwargs):
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
-    ref_seq1 = header.fetch(ref_name, 10, 20).upper() # 10 bases
-    ref_seq2 = header.fetch(ref_name, 20, 30).upper() # 10 bases
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        ref_seq1 = fasta.fetch(ref_name, 10, 20).upper() # 10 bases
+        ref_seq2 = fasta.fetch(ref_name, 20, 30).upper() # 10 bases
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         r1 = pysam.AlignedSegment()
@@ -874,7 +877,8 @@ def generate_sam_18(output_dir: Path, **kwargs):
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
-    ref_match_seq = header.fetch(ref_name, 20, 40).upper() # 20 bases match
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        ref_match_seq = fasta.fetch(ref_name, 20, 40).upper() # 20 bases match
     clip5_len = 5 # 5 bases hardclipped at start
     clip3_len = 5 # 5 bases hardclipped at end
 
@@ -1812,7 +1816,8 @@ def generate_sam_39(output_dir: Path, **kwargs):
         r1 = pysam.AlignedSegment()
         r1.query_name = "bam_input_read_1"
         with pysam.FastaFile(str(ref_path)) as fasta:
-            r1.query_sequence = fasta.fetch(ref_name, 0, read_len).upper()
+            seq = fasta.fetch(ref_name, 0, read_len).upper()
+            r1.query_sequence = seq
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
         r1.reference_id = ref_id
         r1.reference_start = 0
@@ -1823,7 +1828,9 @@ def generate_sam_39(output_dir: Path, **kwargs):
 
         r2 = pysam.AlignedSegment()
         r2.query_name = "bam_input_read_2"
-        r2.query_sequence = header.fetch(ref_name, 50, 50 + read_len).upper()
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            seq = fasta.fetch(ref_name, 50, 50 + read_len).upper()
+            r2.query_sequence = seq
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         r2.reference_id = ref_id
         r2.reference_start = 50
@@ -1857,7 +1864,9 @@ def generate_sam_41(output_dir: Path, **kwargs):
         # Add a simple mapped read (similar to generate_sam_04)
         r1 = pysam.AlignedSegment()
         r1.query_name = "cram_input_read_1"
-        r1.query_sequence = header.fetch(ref_name, 0, read_len).upper()
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            seq = fasta.fetch(ref_name, 0, read_len).upper()
+            r1.query_sequence = seq
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
         r1.reference_id = ref_id
         r1.reference_start = 0
