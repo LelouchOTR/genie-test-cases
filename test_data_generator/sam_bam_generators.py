@@ -766,9 +766,10 @@ def generate_sam_15(output_dir: Path, **kwargs):
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
-    ref_seq_part1 = header.fetch(ref_name, 10, 20).upper() # 10 bases
-    # Deletion of 3 bases from ref: ref pos 20, 21, 22
-    ref_seq_part2 = header.fetch(ref_name, 23, 33).upper() # 10 bases starting after deletion
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        ref_seq_part1 = fasta.fetch(ref_name, 10, 20).upper() # 10 bases
+        # Deletion of 3 bases from ref: ref pos 20, 21, 22
+        ref_seq_part2 = fasta.fetch(ref_name, 23, 33).upper() # 10 bases
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         r1 = pysam.AlignedSegment()
@@ -1280,9 +1281,11 @@ def generate_sam_26(output_dir: Path, **kwargs):
     intron_len = 100 # Long relative to ref1 (len 160)
     exon2_len = 15
     start_pos = 5
-    ref_exon1 = header.fetch(ref_name, start_pos, start_pos + exon1_len).upper()
-    ref_exon2_start = start_pos + exon1_len + intron_len
-    ref_exon2 = header.fetch(ref_name, ref_exon2_start, ref_exon2_start + exon2_len).upper()
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        ref_exon1 = fasta.fetch(ref_name, 5, 5 + 15).upper()
+        ref_exon2_start = 5 + 15 + 100
+        ref_exon2 = fasta.fetch(ref_name, ref_exon2_start, ref_exon2_start +
+                                15).upper()
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         r1 = pysam.AlignedSegment()
@@ -1426,7 +1429,8 @@ def generate_sam_32(output_dir: Path, **kwargs):
         r1 = pysam.AlignedSegment()
         r1.query_name = "optional_tags_read"
         # Create a sequence with a mismatch
-        ref_seq = header.fetch(ref_name, 10, 10 + read_len).upper()
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            ref_seq = fasta.fetch(ref_name, 10, 10 + 15).upper()
         seq = ref_seq[:5] + "N" + ref_seq[6:] # Mismatch at pos 5 (index)
         r1.query_sequence = seq
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
