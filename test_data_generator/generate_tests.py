@@ -2,12 +2,7 @@ import os
 import sys
 from pathlib import Path
 from .config import TEST_CASES, BASE_OUTPUT_DIR
-import utils # Import utils to access helper functions if needed directly
-
-# Ensure the generator directory is in the Python path for relative imports
-_THIS_DIR = Path(__file__).parent
-if str(_THIS_DIR) not in sys.path:
-    sys.path.insert(0, str(_THIS_DIR))
+from . import utils # Import utils to access helper functions if needed directly
 
 def main():
     """Generates all configured test data files."""
