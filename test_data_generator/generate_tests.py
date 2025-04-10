@@ -1,6 +1,9 @@
 import os
 import sys
 from pathlib import Path
+from tqdm import tqdm
+from colorama import Fore, Back, Style, init
+init(autoreset=True)  # Auto-reset colors after each print
 from .config import TEST_CASES, BASE_OUTPUT_DIR
 from . import utils # Import utils to access helper functions if needed directly
 
