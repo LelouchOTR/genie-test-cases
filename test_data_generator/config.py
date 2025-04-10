@@ -460,6 +460,86 @@ TEST_CASES = [
         "output_files": ["reads_1.fq", "reads_2.fq"]
     },
     {
+        "id": "FASTQ_04",
+        "name": "Paired End - mates different length",
+        "format": "fastq", 
+        "output_subdir": "FASTQ_04",
+        "generator_func": "fastq_generators.generate_fastq_04",
+        "params": {},
+        "description": "Paired-end reads with different lengths per mate",
+        "output_files": ["reads_1.fq", "reads_2.fq"]
+    },
+    {
+        "id": "FASTQ_05",
+        "name": "GZIP compressed input",
+        "format": "fastq",
+        "output_subdir": "FASTQ_05",
+        "generator_func": "fastq_generators.generate_fastq_05",
+        "params": {},
+        "description": "FASTQ input compressed with gzip",
+        "output_files": ["reads.fq.gz"]
+    },
+    {
+        "id": "FASTQ_06",
+        "name": "GZIP compressed output",
+        "format": "fastq",
+        "output_subdir": "FASTQ_06",
+        "generator_func": "fastq_generators.generate_fastq_06",
+        "params": {},
+        "description": "Test tool's ability to output gzipped FASTQ",
+        "output_files": ["reads.fq"]
+    },
+    {
+        "id": "FASTQ_07",
+        "name": "Paired End - different read names", 
+        "format": "fastq",
+        "output_subdir": "FASTQ_07",
+        "generator_func": "fastq_generators.generate_fastq_07",
+        "params": {},
+        "description": "Paired-end files with non-matching read names",
+        "output_files": ["reads_1.fq", "reads_2.fq"]
+    },
+    {
+        "id": "FASTQ_08",
+        "name": "Full quality score range",
+        "format": "fastq",
+        "output_subdir": "FASTQ_08",
+        "generator_func": "fastq_generators.generate_fastq_08",
+        "params": {},
+        "description": "All valid Phred+33 quality scores",
+        "output_files": ["reads.fq"]
+    },
+    {
+        "id": "FASTQ_09",
+        "name": "ACGT nucleotide only",
+        "format": "fastq",
+        "output_subdir": "FASTQ_09",
+        "generator_func": "fastq_generators.generate_fastq_09",
+        "params": {},
+        "description": "Reads containing only ACGT bases",
+        "output_files": ["reads.fq"]
+    },
+    {
+        "id": "FASTQ_10",
+        "name": "IUPAC ambiguity codes",
+        "format": "fastq",
+        "output_subdir": "FASTQ_10",
+        "generator_func": "fastq_generators.generate_fastq_10",
+        "params": {},
+        "description": "Reads with IUPAC ambiguity characters",
+        "output_files": ["reads.fq"]
+    },
+    {
+        "id": "FASTQ_11",
+        "name": "Special read name characters",
+        "format": "fastq",
+        "output_subdir": "FASTQ_11",
+        "generator_func": "fastq_generators.generate_fastq_11",
+        "params": {},
+        "description": "Read names with special characters",
+        "output_files": ["reads.fq"]
+    },
+    {
         "id": "FASTQ_12",
         "name": "Paired End - unequal file lengths",
         "format": "fastq",
