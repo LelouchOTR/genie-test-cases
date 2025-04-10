@@ -24,38 +24,38 @@ def main():
             case_id = case_config['id']
             pbar.set_description(f"{Fore.WHITE}Processing {case_id}")
 
-        # Construct output path: base_dir / format / subdir
-        output_dir = base_output_path / case_config['format'] / case_config['output_subdir']
+            # Construct output path: base_dir / format / subdir
+            output_dir = base_output_path / case_config['format'] / case_config['output_subdir']
 
-        # Create the directory
-        utils.ensure_dir(output_dir)
-        print(f"  Ensured directory: {output_dir}")
+            # Create the directory
+            utils.ensure_dir(output_dir)
+            print(f"  Ensured directory: {output_dir}")
 
-        # Load and call the specific generator function
-        func_path = case_config.get('generator_func')
-        if func_path:
-            try:
-                # Split "module.function" into components
-                module_name, func_name = func_path.rsplit('.', 1)
-                # Dynamically import the module
-                module = __import__(f'test_data_generator.{module_name}',
-                                  fromlist=[func_name])
-                # Get the actual function object
-                generator_func = getattr(module, func_name)
-                
-                # Call it with params
-                params = case_config.get('params', {})
-                generator_func(output_dir, **params)
-                success_count += 1
-            except Exception as e:
-                error_count += 1
-                print(f"{Fore.RED}  ERROR in {case_id}: {str(e)}")
-                continue  # Continue to next case  # noqa: F702
-        else:
-            print(f"  WARNING: No generator function defined for {case_config['id']}.")
-            continue  # Skip README generation if no data was attempted  # noqa: F702
+            # Load and call the specific generator function
+            func_path = case_config.get('generator_func')
+            if func_path:
+                try:
+                    # Split "module.function" into components
+                    module_name, func_name = func_path.rsplit('.', 1)
+                    # Dynamically import the module
+                    module = __import__(f'test_data_generator.{module_name}',
+                                        fromlist=[func_name])
+                    # Get the actual function object
+                    generator_func = getattr(module, func_name)
 
-        # Write the README file
+                    # Call it with params
+                    params = case_config.get('params', {})
+                    generator_func(output_dir, **params)
+                    success_count += 1
+                except Exception as e:
+                    error_count += 1
+                    print(f"{Fore.RED}  ERROR in {case_id}: {str(e)}")
+                    continue  # Continue to next case  # noqa: F702
+            else:
+                print(f"  WARNING: No generator function defined for {case_config['id']}.")
+                continue  # Skip README generation if no data was attempted  # noqa: F702
+
+            # Write the README file
         try:
             utils.write_readme(output_dir, case_config)
             print(f"  Generated: {output_dir / 'README.md'}")
