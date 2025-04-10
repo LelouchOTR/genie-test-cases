@@ -50,10 +50,10 @@ def main():
             except Exception as e:
                 error_count += 1
                 print(f"{Fore.RED}  ERROR in {case_id}: {str(e)}")
-                continue # Continue to next case
+                continue  # Continue to next case  # noqa: F702
         else:
             print(f"  WARNING: No generator function defined for {case_config['id']}.")
-            continue # Skip README generation if no data was attempted
+            continue  # Skip README generation if no data was attempted  # noqa: F702
 
         # Write the README file
         try:
