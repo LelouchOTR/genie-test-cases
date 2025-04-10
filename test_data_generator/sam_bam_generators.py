@@ -42,5 +42,3 @@ def generate_sam_01(output_dir: Path, **kwargs):
         samfile.write(a)
 
     print(f"  Generated: {file_path}")
-
-[Rest of the SAM/BAM generator functions would go here...]
