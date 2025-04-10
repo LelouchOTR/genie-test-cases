@@ -207,9 +207,11 @@ def generate_sam_04(output_dir: Path, **kwargs):
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         # Read 1 (matches ref1 start)
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            seq = fasta.fetch("ref1", 0, read_len).upper()
         r1 = pysam.AlignedSegment()
         r1.query_name = "mapped_se_1"
-        r1.query_sequence = header.fetch("ref1", 0, read_len).upper() # Get seq from ref
+        r1.query_sequence = seq
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
         r1.reference_id = header.references.index("ref1")
         r1.reference_start = 0
@@ -219,9 +221,11 @@ def generate_sam_04(output_dir: Path, **kwargs):
         samfile.write(r1)
 
         # Read 2 (matches ref1 elsewhere, reverse strand)
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            seq = fasta.fetch("ref1", 50, 50 + read_len).upper()
         r2 = pysam.AlignedSegment()
         r2.query_name = "mapped_se_2"
-        r2.query_sequence = pysam.reverse_complement(header.fetch("ref1", 50, 50 + read_len).upper())
+        r2.query_sequence = pysam.reverse_complement(seq)
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         r2.reference_id = header.references.index("ref1")
         r2.reference_start = 50
@@ -231,9 +235,11 @@ def generate_sam_04(output_dir: Path, **kwargs):
         samfile.write(r2)
 
         # Read 3 (matches ref2 start)
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            seq = fasta.fetch("ref2", 0, read_len).upper()
         r3 = pysam.AlignedSegment()
-        r3.query_name = "mapped_se_3"
-        r3.query_sequence = header.fetch("ref2", 0, read_len).upper()
+        r3.query_name = "mapped_se_3" 
+        r3.query_sequence = seq
         r3.query_qualities = pysam.qualitystring_to_array("$" * read_len)
         r3.reference_id = header.references.index("ref2")
         r3.reference_start = 0
