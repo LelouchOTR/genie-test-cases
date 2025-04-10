@@ -1,7 +1,7 @@
 import os
 import sys
 from pathlib import Path
-from config import TEST_CASES, BASE_OUTPUT_DIR
+from .config import TEST_CASES, BASE_OUTPUT_DIR
 import utils # Import utils to access helper functions if needed directly
 
 # Ensure the generator directory is in the Python path for relative imports
