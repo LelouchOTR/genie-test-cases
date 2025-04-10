@@ -50,5 +50,5 @@ def main():
 if __name__ == "__main__":
     # Ensure the script is run from the directory containing generate_tests.py
     # or adjust paths accordingly if run from elsewhere.
-    os.chdir(_THIS_DIR) # Change working dir to script dir for consistency
+    os.chdir(Path(__file__).parent) # Change working dir to script dir for consistency
     main()
