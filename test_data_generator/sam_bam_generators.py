@@ -1238,9 +1238,11 @@ def generate_sam_25(output_dir: Path, **kwargs):
     intron_len = 50 # Short intron
     exon2_len = 25
     start_pos = 10
-    ref_exon1 = header.fetch(ref_name, start_pos, start_pos + exon1_len).upper()
-    ref_exon2 = header.fetch(ref_name, start_pos + exon1_len + intron_len, start_pos + exon1_len + intron_len +
-exon2_len).upper()
+    ref_path = utils.copy_reference_to_output(output_dir)
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        ref_exon1 = fasta.fetch(ref_name, start_pos, start_pos + exon1_len).upper()
+        ref_exon2 = fasta.fetch(ref_name, start_pos + exon1_len + intron_len, 
+                              start_pos + exon1_len + intron_len + exon2_len).upper()
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         r1 = pysam.AlignedSegment()
