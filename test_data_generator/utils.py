@@ -54,9 +54,10 @@ def get_default_sam_header() -> pysam.AlignmentHeader:
     }
     return pysam.AlignmentHeader.from_dict(header_dict)
 
-def copy_reference_to_output(output_dir: Path) -> Path:
-    """Copies the default reference FASTA to the output directory."""
-    dest_path = output_dir / REFERENCE_FASTA_PATH.name
+def copy_reference_to_output(output_dir: Path, ref_name: str = "simple_ref.fa") -> Path:
+    """Copies the specified reference FASTA to the output directory."""
+    src_path = _THIS_DIR / "reference" / ref_name
+    dest_path = output_dir / src_path.name
     shutil.copy(str(REFERENCE_FASTA_PATH), str(dest_path))
     # Also copy the index if it exists
     ref_fai = REFERENCE_FASTA_PATH.with_suffix(REFERENCE_FASTA_PATH.suffix + '.fai')

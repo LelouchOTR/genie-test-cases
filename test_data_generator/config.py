@@ -12,7 +12,7 @@ TEST_CASES = [
         "format": "sam",
         "output_subdir": "SAM_01",
         "generator_func": "sam_bam_generators.generate_sam_01",
-        "params": {},
+        "params": {"special_reference": "large_ref.fa"},
         "description": "Single-end unmapped read with basic flags",
         "notes": "Verify handling of unmapped reads",
         "output_files": ["alignment.sam"]
