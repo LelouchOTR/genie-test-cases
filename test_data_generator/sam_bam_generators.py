@@ -473,10 +473,10 @@ def generate_sam_09(output_dir: Path, **kwargs):
     # Create header from the actual reference file
     with pysam.FastaFile(str(ref_path)) as fasta:
         ref_name = fasta.references[0]
-        ref_length = fasta.get_reference_length(ref_name)
-        references = [{'SN': name, 'LN': length} for name, length in zip(fasta.references, fasta.lengths)]
+        references = fasta.references
+        lengths = fasta.lengths
     
-    header = pysam.AlignmentHeader.from_references(references)
+    header = pysam.AlignmentHeader.from_references(references, lengths)
     ref_id = 0  # Using first reference from the actual file
     r1_start = 5
     r1_len = 20
