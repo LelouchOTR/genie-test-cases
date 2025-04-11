@@ -104,7 +104,8 @@ def generate_sam_02(output_dir: Path, **kwargs):
 def generate_sam_03(output_dir: Path, **kwargs):
     """SAM_03: Half-mapped read pair"""
     file_path = output_dir / "alignment.sam"
-    ref_path = utils.copy_reference_to_output(output_dir)
+    # Use special large reference specified in test case params
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
@@ -130,7 +131,7 @@ def generate_sam_03(output_dir: Path, **kwargs):
 
         r2 = pysam.AlignedSegment()
         r2.query_name = "half_mapped_1"
-        r2.query_sequence = "T" * read_len
+        r2.query_sequence = pysam.rc(r1.query_sequence)  # Actual reverse complement
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         set_paired_flags(r2, is_read1=False)
         r2.is_unmapped = True
@@ -1264,6 +1265,7 @@ def generate_sam_25(output_dir: Path, **kwargs):
         r1.mapping_quality = 60
         # CIGAR: Exon1 match, Intron skip, Exon2 match
         r1.cigarstring = f"{exon1_len}M{intron_len}N{exon2_len}M"
+        r1.set_tag('SA', f"ref1:{start_pos + exon1_len + intron_len}+{exon2_len}M,60,0;", 'Z')
         r1.flag = 0
         samfile.write(r1)
 
