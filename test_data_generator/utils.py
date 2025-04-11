@@ -54,6 +54,20 @@ def get_default_sam_header() -> pysam.AlignmentHeader:
     }
     return pysam.AlignmentHeader.from_dict(header_dict)
 
+def reverse_complement(seq: str) -> str:
+    """Return the reverse complement of a DNA sequence.
+    
+    Args:
+        seq: Input DNA sequence string
+        
+    Returns:
+        Reverse complemented sequence
+    """
+    complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C',
+                 'a': 't', 't': 'a', 'c': 'g', 'g': 'c',
+                 'N': 'N', 'n': 'n'}
+    return ''.join([complement.get(base, 'N') for base in reversed(seq)])
+
 def copy_reference_to_output(output_dir: Path, ref_name: str = "simple_ref.fa") -> Path:
     """Copies the specified reference FASTA to the output directory."""
     src_path = _THIS_DIR / "reference" / ref_name
