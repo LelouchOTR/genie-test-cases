@@ -471,7 +471,7 @@ def generate_sam_09(output_dir: Path, **kwargs):
     # reads far apart on the *same* short reference. Real long distance might
     # require a larger reference file.
     file_path = output_dir / "alignment.sam"
-    ref_path = utils.copy_reference_to_output(output_dir)
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name=kwargs.get("special_reference", "simple_ref.fa"))
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
