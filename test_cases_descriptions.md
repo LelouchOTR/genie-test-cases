@@ -1,19 +1,19 @@
 ## Fastq
 
-| Test                                  | Description                                                                                              |
-| :------------------------------------ | :------------------------------------------------------------------------------------------------------- |
-| Single End – constant read length     | Three reads in a single fastq file with constant read length.                                            |
-| Single End – variable read length     | Three reads in a single fastq file with the second read having a different length than the other two.    |
-| Paired End - both mates same length   | Two paired fastq files with three reads in each file. The read length is constant for all reads.         |
-| Paired End - mates different length   | Two paired fastq files with three reads in each file. The read length is constant in each file but different between the files. |
-| (fastq.gz input)                      | Three reads in a single fastq file with constant read length, but gzipped.                               |
-| (fastq.gz output)                     | Three reads in a single fastq file with constant read length, but the decoded output is gzipped.         |
-| Paired End - different read names     | Two paired fastq files with three reads in each file. The read names between mates differs.              |
-| Alphabet test Quality score range     | A single fastq file with a single read containing the full range of allowed quality values.              |
-| Alphabet test nucleotide alphabet ACTG  | A single fastq file with a single read containing the full range of the ACGT nucleotide alphabet         |
-| Alphabet test nucleotide alphabet IUPAC | A single fastq file with a single read containing the full range of the IUPAC nucleotide alphabet        |
-| Read name alphabet test               | A single fastq file with a single read containing the full range of the allowed read name characters     |
-| Paired End - unequal file lengths     | A paired end fastq file, but there are reads at the end of one file with no mate in the other file.      |
+| Test #   | Test                                  | Description                                                                                              |
+| :------: | :------------------------------------ | :------------------------------------------------------------------------------------------------------- |
+| FASTQ_01 | Single End – constant read length     | Three reads in a single fastq file with constant read length.                                            |
+| FASTQ_02 | Single End – variable read length     | Three reads in a single fastq file with the second read having a different length than the other two.    |
+| FASTQ_03 | Paired End - both mates same length   | Two paired fastq files with three reads in each file. The read length is constant for all reads.         |
+| FASTQ_04 | Paired End - mates different length   | Two paired fastq files with three reads in each file. The read length is constant in each file but different between the files. |
+| FASTQ_05 | (fastq.gz input)                      | Three reads in a single fastq file with constant read length, but gzipped.                               |
+| FASTQ_06 | (fastq.gz output)                     | Three reads in a single fastq file with constant read length, but the decoded output is gzipped.         |
+| FASTQ_07 | Paired End - different read names     | Two paired fastq files with three reads in each file. The read names between mates differs.              |
+| FASTQ_08 | Alphabet test Quality score range     | A single fastq file with a single read containing the full range of allowed quality values.              |
+| FASTQ_09 | Alphabet test nucleotide alphabet ACTG  | A single fastq file with a single read containing the full range of the ACGT nucleotide alphabet         |
+| FASTQ_10 | Alphabet test nucleotide alphabet IUPAC | A single fastq file with a single read containing the full range of the IUPAC nucleotide alphabet        |
+| FASTQ_11 | Read name alphabet test               | A single fastq file with a single read containing the full range of the allowed read name characters     |
+| FASTQ_12 | Paired End - unequal file lengths     | A paired end fastq file, but there are reads at the end of one file with no mate in the other file.      |
 
 ## SAM/BAM
 
