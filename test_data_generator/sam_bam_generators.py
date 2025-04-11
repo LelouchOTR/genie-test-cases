@@ -17,10 +17,11 @@ def set_mate_info(segment: pysam.AlignedSegment, header: pysam.AlignmentHeader,
     segment.mate_is_unmapped = mate_is_unmapped
     segment.mate_is_reverse = mate_is_reverse
     
-    print(f"\nset_mate_info DEBUG - Received mate_ref_name: {mate_ref_name} (type: {type(mate_ref_name)})")
+    print(f"\nset_mate_info DEBUG - Received mate_ref_name: {repr(mate_ref_name)} (type: {type(mate_ref_name)})")
     
     if mate_ref_name is not None and not mate_is_unmapped:
-        print(f"Checking header references: {header.references}")
+        print(f"Header references types: {[type(r) for r in header.references]}")
+        print(f"Header references values: {header.references}")
         try:
             ref_id = header.references.index(mate_ref_name)
             print(f"Found mate_ref_name '{mate_ref_name}' at index {ref_id}")
@@ -495,7 +496,8 @@ def generate_sam_09(output_dir: Path, **kwargs):
 
     ref_id = 0
     ref_name = str(references[0])
-    print(f"SAM_09 DEBUG - Using ref_name: {ref_name} (type: {type(ref_name)})")
+    print(f"SAM_09 DEBUG - ref_name type: {type(ref_name)}, value: {repr(ref_name)}")
+    print(f"SAM_09 DEBUG - header references: {header.references} (types: {[type(r) for r in header.references]})")
     r1_start = 5
     r1_len = 20
     # Place R2 near end of the actual large reference
