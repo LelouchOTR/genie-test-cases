@@ -93,7 +93,7 @@ TEST_CASES = [
         "format": "sam",
         "output_subdir": "SAM_09",
         "generator_func": "sam_bam_generators.generate_sam_09",
-        "params": {},
+        "params": {"special_reference": "large_ref.fa"},
         "description": "Paired reads mapped far apart (>1M bases)",
         "output_files": ["alignment.sam", "simple_ref.fa"]
     },
