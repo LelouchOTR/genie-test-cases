@@ -331,8 +331,7 @@ def generate_sam_06(output_dir: Path, **kwargs):
         r1.mapping_quality = 60
         r1.cigarstring = f"{r1_len}M"
         # Mate info: R2, mapped, same ref, r2_start, IS reversed
-        set_mate_info(r1, header, mate_ref_name=ref_name, mate_start=r2_start, mate_is_unmapped=False,
-mate_is_reverse=True)
+        set_mate_info(r1, header, ref_name, r2_start, False, True)
         r1.template_length = tlen
         # Flags: 0x1 (paired) + 0x2 (proper pair) + 0x20 (mate reverse) + 0x40 (R1) = 99
         r1.flag = 99
@@ -349,8 +348,7 @@ mate_is_reverse=True)
         r2.cigarstring = f"{r2_len}M"
         r2.is_reverse = True # R2 is reverse
         # Mate info: R1, mapped, same ref, r1_start, NOT reversed
-        set_mate_info(r2, header, mate_ref_name=ref_name, mate_start=r1_start, mate_is_unmapped=False,
-mate_is_reverse=False)
+        set_mate_info(r2, header, ref_name, r1_start, False, False)
         r2.template_length = -tlen
         # Flags: 0x1 (paired) + 0x2 (proper pair) + 0x10 (read reverse) + 0x80 (R2) = 147
         r2.flag = 147
@@ -472,12 +470,13 @@ def generate_sam_09(output_dir: Path, **kwargs):
     
     # Create header from the actual reference file
     with pysam.FastaFile(str(ref_path)) as fasta:
-        ref_name = fasta.references[0]
-        references = fasta.references
+        # Explicitly convert references to strings
+        references = [str(ref) for ref in fasta.references]
         lengths = fasta.lengths
     
     header = pysam.AlignmentHeader.from_references(references, lengths)
-    ref_id = 0  # Using first reference from the actual file
+    ref_id = 0
+    ref_name = str(references[0])  # Ensure string type
     r1_start = 5
     r1_len = 20
     # Place R2 near end of the actual large reference
