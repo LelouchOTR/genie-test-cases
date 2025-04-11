@@ -65,6 +65,8 @@ def generate_fastq_04(output_dir: Path, **kwargs):
     content2 += utils.create_fastq_entry("pair1_diff/2", "T"*len2, "#"*len2)
     content1 += utils.create_fastq_entry("pair2_diff/1", "C"*len1, "$"*len1)
     content2 += utils.create_fastq_entry("pair2_diff/2", "G"*len2, "%"*len2)
+    content1 += utils.create_fastq_entry("pair3_diff/1", "N"*len1, "&"*len1)
+    content2 += utils.create_fastq_entry("pair3_diff/2", "A"*len2, "'"*len2)
 
     with open(file1_path, "w") as f1, open(file2_path, "w") as f2:
         f1.write(content1)
@@ -79,6 +81,7 @@ def generate_fastq_05(output_dir: Path, **kwargs):
     content = ""
     content += utils.create_fastq_entry("read1_gz", "ACGTACGTACGT", "!!!!!!!!!!!!")
     content += utils.create_fastq_entry("read2_gz", "CCCCCCCCCCCC", "############")
+    content += utils.create_fastq_entry("read3_gz", "GGGGGGGGGGGG", "$$$$$$$$$$$$")
     with open(file_path_fq, "w") as f:
         f.write(content)
 
@@ -109,6 +112,8 @@ def generate_fastq_07(output_dir: Path, **kwargs):
     content2 += utils.create_fastq_entry("pair1_read_B", "T"*read_len, "#"*read_len)
     content1 += utils.create_fastq_entry("pair2_forward", "C"*read_len, "$"*read_len)
     content2 += utils.create_fastq_entry("pair2_reverse", "G"*read_len, "%"*read_len)
+    content1 += utils.create_fastq_entry("pair3_left", "G"*read_len, "&"*read_len)
+    content2 += utils.create_fastq_entry("pair3_rightSide", "T"*read_len, "'"*read_len)
 
     with open(file1_path, "w") as f1, open(file2_path, "w") as f2:
         f1.write(content1)
@@ -176,10 +181,8 @@ def generate_fastq_12(output_dir: Path, **kwargs):
     content2 += utils.create_fastq_entry("unequal_pair1/2", "T"*read_len, "#"*read_len)
     content1 += utils.create_fastq_entry("unequal_pair2/1", "C"*read_len, "$"*read_len)
     content2 += utils.create_fastq_entry("unequal_pair2/2", "G"*read_len, "%"*read_len)
-    # Extra read in file 1
+    # Extra read in file 1 (only) to make unequal lengths
     content1 += utils.create_fastq_entry("extra_read/1", "N"*read_len, "&"*read_len)
-    # Extra read in file 2 (optional, could just be one file)
-    content2 += utils.create_fastq_entry("extra_read_mate_missing/2", "A"*read_len, "'"*read_len)
 
     with open(file1_path, "w") as f1, open(file2_path, "w") as f2:
         f1.write(content1)
