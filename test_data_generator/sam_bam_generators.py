@@ -475,70 +475,58 @@ mate_is_reverse=False)
     # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_09(output_dir: Path, **kwargs):
-    """SAM_09: Mapped read pair – long distance + TLEN"""
-    # Get actual reference length from the copied large reference
+    """SAM_09: Mapped read pair - long distance + TLEN (>1M bases)"""
     file_path = output_dir / "alignment.sam"
-    ref_path = utils.copy_reference_to_output(output_dir, ref_name=kwargs.get("special_reference", "simple_ref.fa"))
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
     
+    # Get reference data directly from FASTA
     with pysam.FastaFile(str(ref_path)) as fasta:
-        references = [str(ref) for ref in fasta.references]
+        references = fasta.references  # Already strings
         lengths = fasta.lengths
-        
-        # Debug: Check reference data
-        print(f"\nSAM_09 DEBUG - FASTA References: {references} (types: {[type(r) for r in references]})")
-        print(f"SAM_09 DEBUG - FASTA Lengths: {lengths} (types: {[type(l) for l in lengths]})")
+        ref_name = references[0]  # Use first reference directly
     
+    # Create header using references from FASTA
     header = pysam.AlignmentHeader.from_references(references, lengths)
     
-    # Debug: Check header construction
-    print(f"SAM_09 DEBUG - Header references: {header.references} (types: {[type(r) for r in header.references]})")
-    print(f"SAM_09 DEBUG - Header lengths: {header.lengths}")
-
-    ref_id = 0
-    ref_name = str(references[0])
-    print(f"SAM_09 DEBUG - ref_name type: {type(ref_name)}, value: {repr(ref_name)}")
-    print(f"SAM_09 DEBUG - header references: {header.references} (types: {[type(r) for r in header.references]})")
+    # Get reference length from header (more reliable than FASTA)
+    ref_id = header.references.index(ref_name)
+    ref_length = header.lengths[ref_id]
+    
+    # Position reads far apart (adjust multiplier as needed for test case)
     r1_start = 5
-    r1_len = 20
-    # Place R2 near end of the actual large reference
-    r2_start = header.get_reference_length(ref_id) - 50  # 50 bp from end
-    r2_len = 20
-
-    # Assume FR orientation
-    # TLEN = pos(R2_rightmost) - pos(R1_leftmost) + 1 = (130 + 20 - 1) - 5 + 1 = 149 - 5 + 1 = 145
-    tlen = (r2_start + r2_len - 1) - r1_start + 1
+    r2_start = ref_length - 100  # 100bp from end of long reference
+    read_len = 100
+    tlen = (r2_start + read_len) - r1_start  # Positive TLEN
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
-        r1 = pysam.AlignedSegment()
+        # Read 1 (leftmost)
+        r1 = pysam.AlignedSegment(header)
         r1.query_name = "long_dist_pair"
-        r1.query_sequence = "C" * r1_len
-        r1.query_qualities = pysam.qualitystring_to_array("!" * r1_len)
-        set_paired_flags(r1, is_read1=True)
+        r1.query_sequence = "A" * read_len
+        r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
         r1.reference_id = ref_id
         r1.reference_start = r1_start
         r1.mapping_quality = 60
-        r1.cigarstring = f"{r1_len}M"
-        set_mate_info(r1, header, mate_ref_name=ref_name, mate_start=r2_start, mate_is_unmapped=False,
-mate_is_reverse=True)
+        r1.cigarstring = f"{read_len}M"
+        set_mate_info(r1, header, ref_name, r2_start, False, True)
         r1.template_length = tlen
-        # Mark as proper pair? Depends on definition, let's assume yes for this test.
-        r1.flag = 99 # Paired, Proper, Mate Reverse, R1
-        samfile.write(r1)
+        r1.flag = 0x1 | 0x40 | 0x20  # Paired, R1, mate reverse
 
-        r2 = pysam.AlignedSegment()
+        # Read 2 (rightmost)
+        r2 = pysam.AlignedSegment(header)
         r2.query_name = "long_dist_pair"
-        r2.query_sequence = "G" * r2_len
-        r2.query_qualities = pysam.qualitystring_to_array("#" * r2_len)
-        set_paired_flags(r2, is_read1=False)
+        r2.query_sequence = "T" * read_len
+        r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         r2.reference_id = ref_id
         r2.reference_start = r2_start
         r2.mapping_quality = 60
-        r2.cigarstring = f"{r2_len}M"
+        r2.cigarstring = f"{read_len}M"
         r2.is_reverse = True
-        set_mate_info(r2, header, mate_ref_name=ref_name, mate_start=r1_start, mate_is_unmapped=False,
-mate_is_reverse=False)
+        set_mate_info(r2, header, ref_name, r1_start, False, False)
         r2.template_length = -tlen
-        r2.flag = 147 # Paired, Proper, Read Reverse, R2
+        r2.flag = 0x1 | 0x80 | 0x10  # Paired, R2, reverse strand
+
+        samfile.write(r1)
         samfile.write(r2)
 
     # tqdm.write(f"{Fore.GREEN}   {file_path}")
