@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+import pysam
 
 def main():
     """Generate a large reference genome file (>1M bases) for testing."""
