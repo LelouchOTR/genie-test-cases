@@ -1344,11 +1344,11 @@ def generate_sam_28(output_dir: Path, **kwargs):
         r1.query_name = "empty_softclipped_read"
         r1.query_sequence = "N" * read_len # Sequence must be present
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len) # Qualities must be present
-        r1.flag = 4 # Unmapped
-        r1.reference_id = -1
-        r1.reference_start = -1
-        r1.mapping_quality = 0
-        r1.cigarstring = f"{read_len}S" # All softclipped
+        r1.reference_id = 0  # Must have valid reference for mapped read
+        r1.reference_start = 0
+        r1.mapping_quality = 60
+        r1.cigarstring = f"{read_len}S"
+        r1.flag = 0  # Clear unmapped flag (0x4)
         samfile.write(r1)
 
     # tqdm.write(f"{Fore.GREEN}   {file_path}")
