@@ -16,8 +16,19 @@ def set_mate_info(segment: pysam.AlignedSegment, header: pysam.AlignmentHeader,
                   mate_is_unmapped: bool, mate_is_reverse: bool):
     segment.mate_is_unmapped = mate_is_unmapped
     segment.mate_is_reverse = mate_is_reverse
+    
+    print(f"\nset_mate_info DEBUG - Received mate_ref_name: {mate_ref_name} (type: {type(mate_ref_name)})")
+    
     if mate_ref_name is not None and not mate_is_unmapped:
-        segment.next_reference_id = header.references.index(mate_ref_name)
+        print(f"Checking header references: {header.references}")
+        try:
+            ref_id = header.references.index(mate_ref_name)
+            print(f"Found mate_ref_name '{mate_ref_name}' at index {ref_id}")
+        except ValueError:
+            print(f"ERROR: mate_ref_name '{mate_ref_name}' not found in header references!")
+            raise
+        
+        segment.next_reference_id = ref_id
         segment.next_reference_start = mate_start
     else:
         # If mate is unmapped, standard practice is to set mate position info
@@ -468,15 +479,23 @@ def generate_sam_09(output_dir: Path, **kwargs):
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir, ref_name=kwargs.get("special_reference", "simple_ref.fa"))
     
-    # Create header from the actual reference file
     with pysam.FastaFile(str(ref_path)) as fasta:
-        # Explicitly convert references to strings
         references = [str(ref) for ref in fasta.references]
         lengths = fasta.lengths
+        
+        # Debug: Check reference data
+        print(f"\nSAM_09 DEBUG - FASTA References: {references} (types: {[type(r) for r in references]})")
+        print(f"SAM_09 DEBUG - FASTA Lengths: {lengths} (types: {[type(l) for l in lengths]})")
     
     header = pysam.AlignmentHeader.from_references(references, lengths)
+    
+    # Debug: Check header construction
+    print(f"SAM_09 DEBUG - Header references: {header.references} (types: {[type(r) for r in header.references]})")
+    print(f"SAM_09 DEBUG - Header lengths: {header.lengths}")
+
     ref_id = 0
-    ref_name = str(references[0])  # Ensure string type
+    ref_name = str(references[0])
+    print(f"SAM_09 DEBUG - Using ref_name: {ref_name} (type: {type(ref_name)})")
     r1_start = 5
     r1_len = 20
     # Place R2 near end of the actual large reference
