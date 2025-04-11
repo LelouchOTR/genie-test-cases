@@ -481,7 +481,7 @@ def generate_sam_09(output_dir: Path, **kwargs):
     r1_start = 5
     r1_len = 20
     # Place R2 near end of the actual large reference
-    r2_start = ref_length - 50  # 50 bp from end
+    r2_start = header.get_reference_length(ref_id) - 50  # 50 bp from end
     r2_len = 20
 
     # Assume FR orientation
