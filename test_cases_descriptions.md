@@ -39,25 +39,27 @@
 | SAM_18  | Hardclips                                       | Sam file containing a read with H in the CIGAR string                                                                                     |
 | SAM_19  | PCR duplicate flag                              | Sam file with three reads, each containing different values for the flags „PCR duplicate", „Quality checks" and „Properly aligned"        |
 | SAM_20  | Paired end – different flags per mate           | A pair where each mate contains a different combination of the flags „PCR duplicate", „Quality checks" and „Properly aligned"             |
-| SAM_21  | next read … flags – unmapped                    |                                                                                                                                           |
-| SAM_22  | next read … flags – half mapped                 |                                                                                                                                           |
-| SAM_23  | next read … flags – short distance              |                                                                                                                                           |
-| SAM_24  | next read … flags – long distance               |                                                                                                                                           |
-| SAM_25  | Short intron / splice (N)                       |                                                                                                                                           |
-| SAM_26  | Long intron / splice (N)                        |                                                                                                                                           |
-| SAM_27  | Empty read (all bases deleted)                  |                                                                                                                                           |
-| SAM_28  | Empty read (all bases softclipped)              |                                                                                                                                           |
-| SAM_29  | Empty read (all bases hardclipped)              |                                                                                                                                           |
-| SAM_30  | Empty read (no nucleotides in read / * in sam)  |                                                                                                                                           |
-| SAM_31  | Quality scores absent                           |                                                                                                                                           |
-| SAM_32  | Optional tags                                   |                                                                                                                                           |
-| SAM_33  | Read groups                                     |                                                                                                                                           |
-| SAM_34  | Reverse Complement (different + same) – short distance |                                                                                                                                           |
-| SAM_35  | Reverse Complement (different + same) – long distance |                                                                                                                                           |
-| SAM_36  | Reverse Complement (different + same) – unmapped |                                                                                                                                           |
-| SAM_37  | Reverse Complement (different + same) – half mapped |                                                                                                                                           |
-| SAM_38  | Circular reference                              | Sam file with a read overlapping the end of a circular reference.                                                                         |
-| SAM_39  | (bam input)                                     |                                                                                                                                           |
-| SAM_40  | (bam output)                                    |                                                                                                                                           |
-| SAM_41  | (cram input)                                    |                                                                                                                                           |
-| SAM_42  | (cram output)                                   |                                                                                                                                           |
+| SAM_21  | next read … flags – unmapped                    | † Tests unmapped read pairs with proper mate flag configurations (both mates unmapped, mate reference positions set correctly)            |
+| SAM_22  | next read … flags – half mapped                 | † Tests pairs where one mate is mapped and the other is unmapped, with proper flag propagation between mates                              |
+| SAM_23  | next read … flags – short distance              | † Tests proper pair flags and mate coordinate tracking for closely spaced read pairs (<1000bp apart)                                      |
+| SAM_24  | next read … flags – long distance               | † Tests mate coordinate tracking and TLEN field for read pairs separated by large distances (>1Mb apart)                                  |
+| SAM_25  | Short intron / splice (N)                       | † Tests splicing-aware alignment with short introns (<50bp) using N CIGAR operator                                                        |
+| SAM_26  | Long intron / splice (N)                        | † Tests handling of long intronic gaps (>100bp) in RNA-seq alignments using N operator                                                    |
+| SAM_27  | Empty read (all bases deleted)                  | † Tests handling of reads with complete deletion CIGAR strings (e.g., 50D) and empty SEQ/* fields                                         |
+| SAM_28  | Empty read (all bases softclipped)              | † Tests alignments where entire read is soft-clipped (S CIGAR operator) but retains sequence data                                         |
+| SAM_29  | Empty read (all bases hardclipped)              | † Tests alignments with complete hard-clipping (H CIGAR operator) and missing sequence data                                               |
+| SAM_30  | Empty read (no nucleotides in read / * in sam)  | † Tests handling of reads with missing sequence data (SEQ/*) and quality scores (QUAL/*)                                                  |
+| SAM_31  | Quality scores absent                           | † Tests parsing of reads with missing quality scores (QUAL/*) while maintaining proper alignment information                              |
+| SAM_32  | Optional tags                                   | † Tests preservation of optional alignment tags (NM, MD, AS, etc.) through processing pipelines                                            |
+| SAM_33  | Read groups                                     | † Tests handling of multiple read groups (RG tags) and associated metadata (sample, platform, library)                                    |
+| SAM_34  | Reverse Complement (different + same) – short distance | † Tests FR/RF/FF orientation flags for closely spaced pairs with various reverse complement configurations                                |
+| SAM_35  | Reverse Complement (different + same) – long distance | † Tests orientation flag handling for distant read pairs with reverse complement configurations                                           |
+| SAM_36  | Reverse Complement (different + same) – unmapped | † Tests reverse complement flags in unmapped reads and their mates                                                                        |
+| SAM_37  | Reverse Complement (different + same) – half mapped | † Tests reverse complement flag combinations when one mate is mapped and the other is unmapped                                            |
+| SAM_38  | Circular reference                              | † Tests alignment to circular references (common in bacterial/viral genomes) with reads spanning origin                                   |
+| SAM_39  | (bam input)                                     | † Tests BAM file input handling including binary format parsing and index utilization                                                     |
+| SAM_40  | (bam output)                                    | † Tests proper BAM file generation with compressed binary format and optional index creation                                               |
+| SAM_41  | (cram input)                                    | † Tests CRAM format input handling with reference-dependent decoding                                                                      |
+| SAM_42  | (cram output)                                   | † Tests CRAM format output generation with reference-based compression and preservation of alignment details                               |
+
+† AI-generated description for previously missing entries
