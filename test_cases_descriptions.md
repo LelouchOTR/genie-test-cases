@@ -17,47 +17,47 @@
 
 ## SAM/BAM
 
-| Test                                            | Description                                                                                                                               |
-| :---------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
-| Unmapped read – single end                      | Sam file containing one unpaired and unmapped read.                                                                                       |
-| Unmapped pair                                   | Sam file containing three unpaired and unmapped read pairs. The second pair has the „first read" flag in the other order as the other two pairs |
-| Half-mapped read pair                           | Sam file containing three half mapped read pairs. The second pair has the „first read" flag in the other order as the other two pairs      |
-| Mapped read single end                          | Sam file containing three unpaired and mapped reads, all perfect matches to the reference sequence. The second pair has the „first read" flag in the other order as the other two pairs |
-| Mapped read pair – same position + TLEN         | Sam file containing a perfectly mapped pair. The mates are mapped to the same position                                                    |
-| Mapped read pair – enclosed + TLEN              | Sam file containing a perfectly mapped pair. One read encloses the other read, i.a. read A begins before read B begins and ends after the end of read B. |
-| Mapped read pair – overlapping + TLEN           | Sam file containing a perfectly mapped pair. One read overlaps the other read, i.a. read A begins before read B begins and ends before the end of read B. |
-| Mapped read pair – no overlapping + TLEN        | Sam file containing a perfectly mapped pair. One read does not overlap the other read, i.a. read A ends before read B has started         |
-| Mapped read pair – long distance + TLEN         | Sam file containing a perfectly mapped pair. One read does not overlap the other read, i.a. read A ends before read B has started. Distance between the two reads is > 1000000 |
-| Mapped read pair – different reference + TLEN   | Sam file containing a perfectly mapped pair. The mates map to different reference sequences.                                              |
-| Secondary alignment                             | Sam file containing a perfectly mapped single read and a secondary alignment for the same read.                                           |
-| Supplementary / chimeric alignment              | Sam file containing a perfectly mapped chimeric read with at least supplementary alignments.                                              |
-| Base substitution (M, =, X)                     | Sam file containing a read with M, =, X in the CIGAR string                                                                               |
-| Base insertion                                  | Sam file containing a read with I in the CIGAR string                                                                                     |
-| Base deletion                                   | Sam file containing a read with D in the CIGAR string                                                                                     |
-| Softclips                                       | Sam file containing a read with S in the CIGAR string                                                                                     |
-| Padding (P)                                     | Sam file containing a read with P in the CIGAR string                                                                                     |
-| Hardclips                                       | Sam file containing a read with H in the CIGAR string                                                                                     |
-| PCR duplicate flag                              | Sam file with three reads, each containing different values for the flags „PCR duplicate", „Quality checks" and „Properly aligned"        |
-| Paired end – different flags per mate           | A pair where each mate contains a different combination of the flags „PCR duplicate", „Quality checks" and „Properly aligned"             |
-| next read … flags – unmapped                    |                                                                                                                                           |
-| next read … flags – half mapped                 |                                                                                                                                           |
-| next read … flags – short distance              |                                                                                                                                           |
-| next read … flags – long distance               |                                                                                                                                           |
-| Short intron / splice (N)                       |                                                                                                                                           |
-| Long intron / splice (N)                        |                                                                                                                                           |
-| Empty read (all bases deleted)                  |                                                                                                                                           |
-| Empty read (all bases softclipped)              |                                                                                                                                           |
-| Empty read (all bases hardclipped)              |                                                                                                                                           |
-| Empty read (no nucleotides in read / * in sam)  |                                                                                                                                           |
-| Quality scores absent                           |                                                                                                                                           |
-| Optional tags                                   |                                                                                                                                           |
-| Read groups                                     |                                                                                                                                           |
-| Reverse Complement (different + same) – short distance |                                                                                                                                           |
-| Reverse Complement (different + same) – long distance |                                                                                                                                           |
-| Reverse Complement (different + same) – unmapped |                                                                                                                                           |
-| Reverse Complement (different + same) – half mapped |                                                                                                                                           |
-| Circular reference                              | Sam file with a read overlapping the end of a circular reference.                                                                         |
-| (bam input)                                     |                                                                                                                                           |
-| (bam output)                                    |                                                                                                                                           |
-| (cram input)                                    |                                                                                                                                           |
-| (cram output)                                   |                                                                                                                                           |
+| Test #  | Test                                            | Description                                                                                                                               |
+| :-----: | :---------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| SAM_01  | Unmapped read – single end                      | Sam file containing one unpaired and unmapped read.                                                                                       |
+| SAM_02  | Unmapped pair                                   | Sam file containing three unpaired and unmapped read pairs. The second pair has the „first read" flag in the other order as the other two pairs |
+| SAM_03  | Half-mapped read pair                           | Sam file containing three half mapped read pairs. The second pair has the „first read" flag in the other order as the other two pairs      |
+| SAM_04  | Mapped read single end                          | Sam file containing three unpaired and mapped reads, all perfect matches to the reference sequence. The second pair has the „first read" flag in the other order as the other two pairs |
+| SAM_05  | Mapped read pair – same position + TLEN         | Sam file containing a perfectly mapped pair. The mates are mapped to the same position                                                    |
+| SAM_06  | Mapped read pair – enclosed + TLEN              | Sam file containing a perfectly mapped pair. One read encloses the other read, i.a. read A begins before read B begins and ends after the end of read B. |
+| SAM_07  | Mapped read pair – overlapping + TLEN           | Sam file containing a perfectly mapped pair. One read overlaps the other read, i.a. read A begins before read B begins and ends before the end of read B. |
+| SAM_08  | Mapped read pair – no overlapping + TLEN        | Sam file containing a perfectly mapped pair. One read does not overlap the other read, i.a. read A ends before read B has started         |
+| SAM_09  | Mapped read pair – long distance + TLEN         | Sam file containing a perfectly mapped pair. One read does not overlap the other read, i.a. read A ends before read B has started. Distance between the two reads is > 1000000 |
+| SAM_10  | Mapped read pair – different reference + TLEN   | Sam file containing a perfectly mapped pair. The mates map to different reference sequences.                                              |
+| SAM_11  | Secondary alignment                             | Sam file containing a perfectly mapped single read and a secondary alignment for the same read.                                           |
+| SAM_12  | Supplementary / chimeric alignment              | Sam file containing a perfectly mapped chimeric read with at least supplementary alignments.                                              |
+| SAM_13  | Base substitution (M, =, X)                     | Sam file containing a read with M, =, X in the CIGAR string                                                                               |
+| SAM_14  | Base insertion                                  | Sam file containing a read with I in the CIGAR string                                                                                     |
+| SAM_15  | Base deletion                                   | Sam file containing a read with D in the CIGAR string                                                                                     |
+| SAM_16  | Softclips                                       | Sam file containing a read with S in the CIGAR string                                                                                     |
+| SAM_17  | Padding (P)                                     | Sam file containing a read with P in the CIGAR string                                                                                     |
+| SAM_18  | Hardclips                                       | Sam file containing a read with H in the CIGAR string                                                                                     |
+| SAM_19  | PCR duplicate flag                              | Sam file with three reads, each containing different values for the flags „PCR duplicate", „Quality checks" and „Properly aligned"        |
+| SAM_20  | Paired end – different flags per mate           | A pair where each mate contains a different combination of the flags „PCR duplicate", „Quality checks" and „Properly aligned"             |
+| SAM_21  | next read … flags – unmapped                    |                                                                                                                                           |
+| SAM_22  | next read … flags – half mapped                 |                                                                                                                                           |
+| SAM_23  | next read … flags – short distance              |                                                                                                                                           |
+| SAM_24  | next read … flags – long distance               |                                                                                                                                           |
+| SAM_25  | Short intron / splice (N)                       |                                                                                                                                           |
+| SAM_26  | Long intron / splice (N)                        |                                                                                                                                           |
+| SAM_27  | Empty read (all bases deleted)                  |                                                                                                                                           |
+| SAM_28  | Empty read (all bases softclipped)              |                                                                                                                                           |
+| SAM_29  | Empty read (all bases hardclipped)              |                                                                                                                                           |
+| SAM_30  | Empty read (no nucleotides in read / * in sam)  |                                                                                                                                           |
+| SAM_31  | Quality scores absent                           |                                                                                                                                           |
+| SAM_32  | Optional tags                                   |                                                                                                                                           |
+| SAM_33  | Read groups                                     |                                                                                                                                           |
+| SAM_34  | Reverse Complement (different + same) – short distance |                                                                                                                                           |
+| SAM_35  | Reverse Complement (different + same) – long distance |                                                                                                                                           |
+| SAM_36  | Reverse Complement (different + same) – unmapped |                                                                                                                                           |
+| SAM_37  | Reverse Complement (different + same) – half mapped |                                                                                                                                           |
+| SAM_38  | Circular reference                              | Sam file with a read overlapping the end of a circular reference.                                                                         |
+| SAM_39  | (bam input)                                     |                                                                                                                                           |
+| SAM_40  | (bam output)                                    |                                                                                                                                           |
+| SAM_41  | (cram input)                                    |                                                                                                                                           |
+| SAM_42  | (cram output)                                   |                                                                                                                                           |
