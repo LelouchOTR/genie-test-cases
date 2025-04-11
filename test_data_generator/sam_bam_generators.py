@@ -467,19 +467,21 @@ mate_is_reverse=False)
 
 def generate_sam_09(output_dir: Path, **kwargs):
     """SAM_09: Mapped read pair – long distance + TLEN"""
-    # Note: Our default reference is short. We simulate long distance by placing
-    # reads far apart on the *same* short reference. Real long distance might
-    # require a larger reference file.
+    # Get actual reference length from the copied large reference
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir, ref_name=kwargs.get("special_reference", "simple_ref.fa"))
     header = utils.get_default_sam_header()
-    ref_name = "ref1"
+    
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        ref_name = fasta.references[0]  # Get first reference name from actual file
+        ref_length = fasta.get_reference_length(ref_name)
+    
     ref_id = header.references.index(ref_name)
     r1_start = 5
-    r1_len = 20 # R1: 5 - 25
-    # Simulate large distance by putting R2 near the end of ref1 (length 160)
-    r2_start = 130
-    r2_len = 20 # R2: 130 - 150
+    r1_len = 20
+    # Place R2 near end of the actual large reference
+    r2_start = ref_length - 50  # 50 bp from end
+    r2_len = 20
 
     # Assume FR orientation
     # TLEN = pos(R2_rightmost) - pos(R1_leftmost) + 1 = (130 + 20 - 1) - 5 + 1 = 149 - 5 + 1 = 145
