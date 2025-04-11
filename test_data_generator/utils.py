@@ -72,9 +72,14 @@ def copy_reference_to_output(output_dir: Path, ref_name: str = "simple_ref.fa") 
     """Copies the specified reference FASTA to the output directory."""
     src_path = _THIS_DIR / "reference" / ref_name
     dest_path = output_dir / src_path.name
-    shutil.copy(str(REFERENCE_FASTA_PATH), str(dest_path))
+    
+    # Copy main FASTA file
+    shutil.copy(str(src_path), str(dest_path))
+    
     # Also copy the index if it exists
-    ref_fai = REFERENCE_FASTA_PATH.with_suffix(REFERENCE_FASTA_PATH.suffix + '.fai')
-    if ref_fai.exists():
-         shutil.copy(str(ref_fai), str(dest_path.with_suffix(dest_path.suffix + '.fai')))
+    for ext in ['.fai', '.amb', '.ann', '.bwt', '.pac', '.sa']:
+        index_src = src_path.with_suffix(src_path.suffix + ext)
+        if index_src.exists():
+            shutil.copy(str(index_src), str(dest_path.with_suffix(dest_path.suffix + ext)))
+    
     return dest_path
