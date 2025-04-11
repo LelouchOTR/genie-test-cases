@@ -131,7 +131,7 @@ def generate_sam_03(output_dir: Path, **kwargs):
 
         r2 = pysam.AlignedSegment()
         r2.query_name = "half_mapped_1"
-        r2.query_sequence = pysam.utils.rc(r1.query_sequence)  # Actual reverse complement
+        r2.query_sequence = utils.reverse_complement(r1.query_sequence)  # Custom reverse complement
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         set_paired_flags(r2, is_read1=False)
         r2.is_unmapped = True
