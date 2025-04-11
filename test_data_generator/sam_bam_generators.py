@@ -469,13 +469,15 @@ def generate_sam_09(output_dir: Path, **kwargs):
     # Get actual reference length from the copied large reference
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir, ref_name=kwargs.get("special_reference", "simple_ref.fa"))
-    header = utils.get_default_sam_header()
     
+    # Create header from the actual reference file
     with pysam.FastaFile(str(ref_path)) as fasta:
-        ref_name = fasta.references[0]  # Get first reference name from actual file
+        ref_name = fasta.references[0]
         ref_length = fasta.get_reference_length(ref_name)
+        references = [{'SN': name, 'LN': length} for name, length in zip(fasta.references, fasta.lengths)]
     
-    ref_id = header.references.index(ref_name)
+    header = pysam.AlignmentHeader.from_references(references)
+    ref_id = 0  # Using first reference from the actual file
     r1_start = 5
     r1_len = 20
     # Place R2 near end of the actual large reference
