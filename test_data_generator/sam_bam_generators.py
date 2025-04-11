@@ -17,23 +17,15 @@ def set_mate_info(segment: pysam.AlignedSegment, header: pysam.AlignmentHeader,
     segment.mate_is_unmapped = mate_is_unmapped
     segment.mate_is_reverse = mate_is_reverse
     
-    print(f"\nset_mate_info DEBUG - Received mate_ref_name: {repr(mate_ref_name)} (type: {type(mate_ref_name)})")
-    
     if mate_ref_name is not None and not mate_is_unmapped:
-        print(f"Header references types: {[type(r) for r in header.references]}")
-        print(f"Header references values: {header.references}")
         try:
             ref_id = header.references.index(mate_ref_name)
-            print(f"Found mate_ref_name '{mate_ref_name}' at index {ref_id}")
         except ValueError:
-            print(f"ERROR: mate_ref_name '{mate_ref_name}' not found in header references!")
             raise
         
         segment.next_reference_id = ref_id
         segment.next_reference_start = mate_start
     else:
-        # If mate is unmapped, standard practice is to set mate position info
-        # to the same as the read itself (or 0 if this read is also unmapped)
         segment.next_reference_id = segment.reference_id if segment.reference_id is not None else -1
         segment.next_reference_start = segment.reference_start if segment.reference_start is not None else -1
 
@@ -479,24 +471,19 @@ def generate_sam_09(output_dir: Path, **kwargs):
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
     
-    # Get reference data directly from FASTA
     with pysam.FastaFile(str(ref_path)) as fasta:
-        references = fasta.references  # Already strings
+        references = fasta.references
         lengths = fasta.lengths
-        ref_name = references[0]  # Use first reference directly
+        ref_name = references[0]
     
-    # Create header using references from FASTA
     header = pysam.AlignmentHeader.from_references(references, lengths)
-    
-    # Get reference length from header (more reliable than FASTA)
     ref_id = header.references.index(ref_name)
     ref_length = header.lengths[ref_id]
     
-    # Position reads far apart (adjust multiplier as needed for test case)
     r1_start = 5
-    r2_start = ref_length - 100  # 100bp from end of long reference
+    r2_start = ref_length - 100
     read_len = 100
-    tlen = (r2_start + read_len) - r1_start  # Positive TLEN
+    tlen = (r2_start + read_len) - r1_start
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         # Read 1 (leftmost)
@@ -510,7 +497,7 @@ def generate_sam_09(output_dir: Path, **kwargs):
         r1.cigarstring = f"{read_len}M"
         set_mate_info(r1, header, ref_name, r2_start, False, True)
         r1.template_length = tlen
-        r1.flag = 0x1 | 0x40 | 0x20  # Paired, R1, mate reverse
+        r1.flag = 0x1 | 0x40 | 0x20
 
         # Read 2 (rightmost)
         r2 = pysam.AlignedSegment(header)
@@ -524,13 +511,10 @@ def generate_sam_09(output_dir: Path, **kwargs):
         r2.is_reverse = True
         set_mate_info(r2, header, ref_name, r1_start, False, False)
         r2.template_length = -tlen
-        r2.flag = 0x1 | 0x80 | 0x10  # Paired, R2, reverse strand
+        r2.flag = 0x1 | 0x80 | 0x10
 
         samfile.write(r1)
         samfile.write(r2)
-
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_10(output_dir: Path, **kwargs):
     """SAM_10: Mapped read pair – different reference + TLEN"""
