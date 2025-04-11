@@ -371,8 +371,7 @@ def generate_sam_07(output_dir: Path, **kwargs):
     r2_start = 70
     r2_len = 40 # R2: 70 - 110 (overlaps R1)
 
-    # Assume FR orientation: R1 forward, R2 reverse
-    # TLEN = pos(R2_rightmost) - pos(R1_leftmost) + 1 = (r2_start + r2_len - 1) - r1_start + 1 = 109 - 50 + 1 = 60
+    # Calculate TLEN based on actual positions
     tlen = (r2_start + r2_len - 1) - r1_start + 1
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
