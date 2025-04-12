@@ -21,6 +21,12 @@ SAM/BAM/CRAM (42)                  FASTQ (12)
 📊 Metadata documentation   🐍 Python-powered
 ```
 
+## Why This Matters  
+Properly formatted test data helps catch tool errors before real data analysis. This suite validates:  
+- File format compliance  
+- Edge case handling  
+- Pipeline robustness
+
 ## Quick Start
 
 **1. Create Conda Environment**
@@ -69,19 +75,6 @@ Modify `config.py` to:
 - Change output locations  
 - Select specific test cases  
 - Adjust reference genomes
-
-## Composition Note
-The 54 total tests include:
-- 28 core alignment scenarios
-- 14 special case tests (integrated with alignment formats)
-- 12 FASTQ variations
-- 4 format conversion tests
-
-## Why This Matters  
-Properly formatted test data helps catch tool errors before real data analysis. This suite validates:  
-- File format compliance  
-- Edge case handling  
-- Pipeline robustness
 
 ---
 
