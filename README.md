@@ -5,7 +5,7 @@ Generates standardized test files for validating bioinformatics tools. Contains 
 ```text
 SAM/BAM/CRAM (42)      FASTQ (12)       
 █████████████████████  ████████████
-│─ Core Alignment Tests (28)       │─ Core FASTQ (10)
+│─ Core Alignment Tests (28)       ├─ Core FASTQ (10)
 │─ Special Cases* (14)             ╰─ Compression (2)
 ╰─ Format Conversions (4)
 
