@@ -47,7 +47,6 @@ def generate_sam_01(output_dir: Path, **kwargs):
         a.is_paired = False
         samfile.write(a)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_02(output_dir: Path, **kwargs):
     """SAM_02: Unmapped pair"""
@@ -103,7 +102,6 @@ def generate_sam_02(output_dir: Path, **kwargs):
         r2.flag = flag_r2
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_03(output_dir: Path, **kwargs):
     """SAM_03: Half-mapped read pair"""
@@ -201,8 +199,6 @@ mate_is_reverse=False)
         r2.flag = 133 # Same flags as pair 1 R2
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_04(output_dir: Path, **kwargs):
     """SAM_04: Mapped read single end"""
@@ -254,8 +250,6 @@ def generate_sam_04(output_dir: Path, **kwargs):
         r3.flag = 0
         samfile.write(r3)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_05(output_dir: Path, **kwargs):
     """SAM_05: Mapped read pair – same position + TLEN"""
@@ -304,8 +298,6 @@ mate_is_reverse=False)
         r2.flag = 131
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_06(output_dir: Path, **kwargs):
     """SAM_06: Mapped read pair – enclosed + TLEN"""
@@ -357,8 +349,6 @@ def generate_sam_06(output_dir: Path, **kwargs):
         r2.flag = 147
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_07(output_dir: Path, **kwargs):
     """SAM_07: Mapped read pair – overlapping + TLEN"""
@@ -411,8 +401,6 @@ mate_is_reverse=False)
         r2.flag = 147
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_08(output_dir: Path, **kwargs):
     """SAM_08: Mapped read pair – no overlapping + TLEN"""
@@ -462,8 +450,6 @@ mate_is_reverse=False)
         r2.flag = 147 # Paired, Proper, Read Reverse, R2
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_09(output_dir: Path, **kwargs):
     """SAM_09: Mapped read pair - long distance + TLEN (>1M bases)"""
@@ -565,8 +551,6 @@ mate_is_reverse=False)
         r2.flag = 129
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_11(output_dir: Path, **kwargs):
     """SAM_11: Secondary alignment"""
@@ -619,8 +603,6 @@ def generate_sam_11(output_dir: Path, **kwargs):
         s2.flag = 256
         samfile.write(s2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_12(output_dir: Path, **kwargs):
     """SAM_12: Supplementary / chimeric alignment"""
@@ -670,8 +652,6 @@ def generate_sam_12(output_dir: Path, **kwargs):
         s1.flag = 2048
         samfile.write(s1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_13(output_dir: Path, **kwargs):
     """SAM_13: Base substitution (M, =, X)"""
@@ -724,9 +704,6 @@ def generate_sam_13(output_dir: Path, **kwargs):
         samfile.write(r2)
 
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-
 def generate_sam_14(output_dir: Path, **kwargs):
     """SAM_14: Base insertion"""
     file_path = output_dir / "alignment.sam"
@@ -753,8 +730,6 @@ def generate_sam_14(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_15(output_dir: Path, **kwargs):
     """SAM_15: Base deletion"""
@@ -782,8 +757,6 @@ def generate_sam_15(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_16(output_dir: Path, **kwargs):
     """SAM_16: Softclips"""
@@ -835,8 +808,6 @@ def generate_sam_16(output_dir: Path, **kwargs):
         r3.flag = 0
         samfile.write(r3)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_17(output_dir: Path, **kwargs):
     """SAM_17: Padding (P)"""
@@ -865,8 +836,6 @@ def generate_sam_17(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_18(output_dir: Path, **kwargs):
     """SAM_18: Hardclips"""
@@ -918,8 +887,6 @@ def generate_sam_18(output_dir: Path, **kwargs):
         r3.flag = 0
         samfile.write(r3)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_19(output_dir: Path, **kwargs):
     """SAM_19: PCR duplicate flag"""
@@ -989,8 +956,6 @@ mate_is_reverse=False)
         r3_2.flag = 0x1 + 0x2 + 0x10 + 0x80 # = 147
         samfile.write(r3_2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_20(output_dir: Path, **kwargs):
     """SAM_20: Paired end – different flags per mate"""
@@ -1076,8 +1041,6 @@ mate_is_reverse=False)
         r2.flag = 147
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_21(output_dir: Path, **kwargs):
     """SAM_21: next read … flags – unmapped"""
@@ -1099,8 +1062,6 @@ def generate_sam_21(output_dir: Path, **kwargs):
         r1.mate_is_reverse = False
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires unmapped read with mate flags set.")
 
 def generate_sam_22(output_dir: Path, **kwargs):
     """SAM_22: next read … flags – half mapped"""
@@ -1129,9 +1090,6 @@ def generate_sam_22(output_dir: Path, **kwargs):
         r1.flag = 9
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires mapped read with mate_unmapped flag set.")
 
 def generate_sam_23(output_dir: Path, **kwargs):
     """SAM_23: next read … flags – short distance"""
@@ -1187,10 +1145,6 @@ def generate_sam_23(output_dir: Path, **kwargs):
         r2.flag = 147
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires mapped read with mate flags indicating nearby mate.")
-
 
 def generate_sam_24(output_dir: Path, **kwargs):
     """SAM_24: next read … flags – long distance"""
@@ -1230,9 +1184,6 @@ def generate_sam_24(output_dir: Path, **kwargs):
         samfile.write(r1)
         # (Mate R2 not strictly needed for this test)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires mapped read with mate flags indicating far away mate.")
 
 def generate_sam_25(output_dir: Path, **kwargs):
     """SAM_25: Short intron / splice (N)"""
@@ -1266,8 +1217,6 @@ def generate_sam_25(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_26(output_dir: Path, **kwargs):
     """SAM_26: Long intron / splice (N)"""
@@ -1301,8 +1250,6 @@ def generate_sam_26(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_27(output_dir: Path, **kwargs):
     """SAM_27: Empty read (all bases deleted)"""
@@ -1328,7 +1275,6 @@ def generate_sam_27(output_dir: Path, **kwargs):
         r1.cigarstring = f"{deletion_len}D" # All deleted CIGAR
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_28(output_dir: Path, **kwargs):
     """SAM_28: Empty read (all bases softclipped)"""
@@ -1349,7 +1295,6 @@ def generate_sam_28(output_dir: Path, **kwargs):
         r1.flag = 0  # Clear unmapped flag (0x4)
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_29(output_dir: Path, **kwargs):
     """SAM_29: Empty read (all bases hardclipped)"""
@@ -1370,7 +1315,6 @@ def generate_sam_29(output_dir: Path, **kwargs):
         r1.cigarstring = f"{hardclip_len}H" # All hardclipped
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_30(output_dir: Path, **kwargs):
     """SAM_30: Empty read (no nucleotides in read / * in sam)"""
@@ -1390,7 +1334,6 @@ def generate_sam_30(output_dir: Path, **kwargs):
         r1.cigarstring = "*" # CIGAR is also often '*' here
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_31(output_dir: Path, **kwargs):
     """SAM_31: Quality scores absent"""
@@ -1414,8 +1357,6 @@ def generate_sam_31(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_32(output_dir: Path, **kwargs):
     """SAM_32: Optional tags"""
@@ -1452,8 +1393,6 @@ def generate_sam_32(output_dir: Path, **kwargs):
         r1.set_tag('ZZ', 'custom_tag_value', 'Z') # Custom tag
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_33(output_dir: Path, **kwargs):
     """SAM_33: Read groups"""
@@ -1511,8 +1450,6 @@ def generate_sam_33(output_dir: Path, **kwargs):
         r3.set_tag('RG', 'rg1', 'Z')
         samfile.write(r3)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_34(output_dir: Path, **kwargs):
     """SAM_34: Reverse Complement (different + same) – short distance"""
@@ -1597,9 +1534,6 @@ def generate_sam_34(output_dir: Path, **kwargs):
         r2.template_length = tlen; r2.flag = 129 # Paired, R2 (Not proper, Mate not Rev)
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires pairs with different is_reverse/mate_is_reverse flag combinations.")
 
 def generate_sam_35(output_dir: Path, **kwargs):
     """SAM_35: Reverse Complement (different + same) – long distance"""
@@ -1641,10 +1575,6 @@ def generate_sam_35(output_dir: Path, **kwargs):
         # Flag: Paired, Read Rev, R2. Maybe not 'proper'.
         r2.flag = 145 # 0x1 + 0x10 + 0x80
         samfile.write(r2)
-
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires pairs with different reverse flags and large separation.")
 
 
 def generate_sam_36(output_dir: Path, **kwargs):
@@ -1697,8 +1627,6 @@ def generate_sam_36(output_dir: Path, **kwargs):
         r2.flag = 0x1 + 0x4 + 0x8 + 0x80 # = 133
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires unmapped pairs with different reverse flags.")
 
 def generate_sam_37(output_dir: Path, **kwargs):
     """SAM_37: Reverse Complement (different + same) – half mapped"""
@@ -1765,9 +1693,6 @@ def generate_sam_37(output_dir: Path, **kwargs):
         r2.flag = 165
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires half-mapped pairs with different reverse flags.")
 
 def generate_sam_38(output_dir: Path, **kwargs):
     """SAM_38: Circular reference"""
@@ -1803,9 +1728,6 @@ def generate_sam_38(output_dir: Path, **kwargs):
         r1.set_tag("ZC", "circular_test", "Z")
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Read placed near end of linear reference. Tool under test must handle circularity.")
 
 def generate_sam_39(output_dir: Path, **kwargs):
     """SAM_39: (bam input) - Generate BAM"""
@@ -1845,8 +1767,6 @@ def generate_sam_39(output_dir: Path, **kwargs):
         r2.flag = 0
         bamfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_40(output_dir: Path, **kwargs):
     """SAM_40: (bam output) - Generate SAM input for testing BAM output"""
@@ -1854,8 +1774,6 @@ def generate_sam_40(output_dir: Path, **kwargs):
     # So we provide a standard sam file as input. Reference also needed.
     # Reuse SAM_04 generator.
     generate_sam_04(output_dir, **kwargs)
-    # tqdm.write(f"{Fore.GREEN}  Note: Generated standard alignment.sam and copied reference for testing bam output capability.")
-    # tqdm.write(f"{Fore.GREEN}  Note: Generated standard alignment.sam for testing bam output capability.")
 
 def generate_sam_41(output_dir: Path, **kwargs):
     """SAM_41: (cram input) - Generate CRAM"""
@@ -1895,8 +1813,6 @@ def generate_sam_41(output_dir: Path, **kwargs):
         r2.flag = 0
         cramfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_42(output_dir: Path, **kwargs):
     """SAM_42: (cram output) - Generate SAM"""
@@ -1904,4 +1820,3 @@ def generate_sam_42(output_dir: Path, **kwargs):
     # So we just provide a standard sam file as input. Reference also needed.
     # Reuse SAM_04 generator.
     generate_sam_04(output_dir, **kwargs)
-    # tqdm.write(f"{Fore.GREEN}  Note: Generated standard alignment.sam and copied reference for testing cram output capability.")

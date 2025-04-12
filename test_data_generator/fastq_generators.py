@@ -14,10 +14,8 @@ def generate_fastq_01(output_dir: Path, **kwargs):
     content += utils.create_fastq_entry("read1_const", "ACGTACGTACGT", "!!!!!!!!!!!!") # len 12
     content += utils.create_fastq_entry("read2_const", "CCCCCCCCCCCC", "############") # len 12
     content += utils.create_fastq_entry("read3_const", "GGGGGGGGGGGG", "$$$$$$$$$$$$") # len 12
-
     with open(file_path, "w") as f:
         f.write(content)
-    # tqdm.write(f"  Generated: {file_path}")
 
 def generate_fastq_02(output_dir: Path, **kwargs):
     """FASTQ_02: Single End – variable read length"""
@@ -26,10 +24,8 @@ def generate_fastq_02(output_dir: Path, **kwargs):
     content += utils.create_fastq_entry("read1_var", "ACGTACGTACGT", "!!!!!!!!!!!!") # len 12
     content += utils.create_fastq_entry("read2_var", "CCCCCCCC", "########")       # len 8
     content += utils.create_fastq_entry("read3_var", "GGGGGGGGGGGGGG", "$$$$$$$$$$$$$$") # len 14
-
     with open(file_path, "w") as f:
         f.write(content)
-    # tqdm.write(f"  Generated: {file_path}")
 
 def generate_fastq_03(output_dir: Path, **kwargs):
     """FASTQ_03: Paired End - both mates same length"""
@@ -49,8 +45,6 @@ def generate_fastq_03(output_dir: Path, **kwargs):
     with open(file1_path, "w") as f1, open(file2_path, "w") as f2:
         f1.write(content1)
         f2.write(content2)
-    # tqdm.write(f"  Generated: {file1_path}")
-    # tqdm.write(f"  Generated: {file2_path}")
 
 def generate_fastq_04(output_dir: Path, **kwargs):
     """FASTQ_04: Paired End - mates different length"""
@@ -71,8 +65,6 @@ def generate_fastq_04(output_dir: Path, **kwargs):
     with open(file1_path, "w") as f1, open(file2_path, "w") as f2:
         f1.write(content1)
         f2.write(content2)
-    # tqdm.write(f"  Generated: {file1_path}")
-    # tqdm.write(f"  Generated: {file2_path}")
 
 def generate_fastq_05(output_dir: Path, **kwargs):
     """FASTQ_05: (fastq.gz input)"""
@@ -90,14 +82,12 @@ def generate_fastq_05(output_dir: Path, **kwargs):
     with open(file_path_fq, 'rb') as f_in, gzip.open(file_path_gz, 'wb') as f_out:
         shutil.copyfileobj(f_in, f_out)
     file_path_fq.unlink() # Remove temporary file
-    # tqdm.write(f"  Generated: {file_path_gz}")
 
 def generate_fastq_06(output_dir: Path, **kwargs):
     """FASTQ_06: (fastq.gz output) - Generate plain fastq"""
     # This case expects the *tool under test* to produce gz output.
     # So we just provide a standard fastq file as input.
     generate_fastq_01(output_dir, **kwargs) # Reuse generator for constant length
-    # tqdm.write(f"  Note: Generated standard reads.fq for testing gz output capability.")
 
 def generate_fastq_07(output_dir: Path, **kwargs):
     """FASTQ_07: Paired End - different read names"""
@@ -118,8 +108,6 @@ def generate_fastq_07(output_dir: Path, **kwargs):
     with open(file1_path, "w") as f1, open(file2_path, "w") as f2:
         f1.write(content1)
         f2.write(content2)
-    # tqdm.write(f"  Generated: {file1_path}")
-    # tqdm.write(f"  Generated: {file2_path}")
 
 def generate_fastq_08(output_dir: Path, **kwargs):
     """FASTQ_08: Alphabet test Quality score range"""
@@ -131,7 +119,6 @@ def generate_fastq_08(output_dir: Path, **kwargs):
     content = utils.create_fastq_entry("qual_range_read", sequence, qual_chars)
     with open(file_path, "w") as f:
         f.write(content)
-    # tqdm.write(f"  Generated: {file_path}")
 
 def generate_fastq_09(output_dir: Path, **kwargs):
     """FASTQ_09: Alphabet test nucleotide alphabet ACTG"""
@@ -142,7 +129,6 @@ def generate_fastq_09(output_dir: Path, **kwargs):
     content = utils.create_fastq_entry("acgt_read", sequence, quality)
     with open(file_path, "w") as f:
         f.write(content)
-    # tqdm.write(f"  Generated: {file_path}")
 
 def generate_fastq_10(output_dir: Path, **kwargs):
     """FASTQ_10: Alphabet test nucleotide alphabet IUPAC"""
@@ -153,7 +139,6 @@ def generate_fastq_10(output_dir: Path, **kwargs):
     content = utils.create_fastq_entry("iupac_read", sequence, quality)
     with open(file_path, "w") as f:
         f.write(content)
-    # tqdm.write(f"  Generated: {file_path}")
 
 def generate_fastq_11(output_dir: Path, **kwargs):
     """FASTQ_11: Read name alphabet test"""
@@ -166,7 +151,6 @@ def generate_fastq_11(output_dir: Path, **kwargs):
     content = utils.create_fastq_entry(read_name, sequence, quality)
     with open(file_path, "w") as f:
         f.write(content)
-    # tqdm.write(f"  Generated: {file_path}")
 
 def generate_fastq_12(output_dir: Path, **kwargs):
     """FASTQ_12: Paired End - unequal file lengths"""
@@ -187,5 +171,3 @@ def generate_fastq_12(output_dir: Path, **kwargs):
     with open(file1_path, "w") as f1, open(file2_path, "w") as f2:
         f1.write(content1)
         f2.write(content2)
-    # tqdm.write(f"  Generated: {file1_path}")
-    # tqdm.write(f"  Generated: {file2_path}")
