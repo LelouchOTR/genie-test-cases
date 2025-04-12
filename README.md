@@ -48,9 +48,9 @@ test_data/
 ```text
 SAM/BAM/CRAM (42)              FASTQ (12)
 ├─ Core Alignment Features     ├─ Read Types
-│  ├─ Mapped Pairs            ├─ Paired/Single End  
-│  ├─ Alignment Flags         ├─ Quality Scores
-│  ├─ CIGAR Operations        ╰─ Compression
+│  ├─ Mapped Pairs             ├─ Paired/Single End  
+│  ├─ Alignment Flags          ├─ Quality Scores
+│  ├─ CIGAR Operations         ╰─ Compression
 │  ╰─ Optional Tags
 │
 ├─ Special Cases
