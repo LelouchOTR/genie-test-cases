@@ -1272,7 +1272,7 @@ def generate_sam_27(output_dir: Path, **kwargs):
         r1.reference_id = header.references.index("ref1") # Nominal ref
         r1.reference_start = 10 # Nominal start
         r1.mapping_quality = 0
-        r1.cigarstring = f"{deletion_len}D" # All deleted CIGAR
+        r1.cigarstring = "*"  # CIGAR must be '*' for unmapped reads
         samfile.write(r1)
 
 
@@ -1312,7 +1312,7 @@ def generate_sam_29(output_dir: Path, **kwargs):
         r1.reference_id = -1
         r1.reference_start = -1
         r1.mapping_quality = 0
-        r1.cigarstring = f"{hardclip_len}H" # All hardclipped
+        r1.cigarstring = "*"  # CIGAR must be '*' for unmapped reads
         samfile.write(r1)
 
 
