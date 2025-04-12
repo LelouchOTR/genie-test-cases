@@ -1,8 +1,13 @@
 # Test Data Generator for SAM/BAM/CRAM and FASTQ Files
 
-![Test Coverage](https://via.placeholder.com/800x200.png?text=42+SAM/BAM+tests+%7C+12+FASTQ+tests+%7C+3+reference+genomes)
-
 Generates standardized test files for validating bioinformatics tools. Contains 54 pre-built scenarios covering common edge cases and format requirements.
+
+```text
+SAM/BAM/CRAM (42)      FASTQ (12)        Special (14)
+█████████████████████  ████████████      ████████████
+Mapped Pairs (18)      Paired End (6)    Empty Reads (4)
+Flags/Formats (24)     Compression (2)   Edge Cases (10)
+```
 
 ## Key Features
 
@@ -32,11 +37,20 @@ Files appear in:
 
 ## Test Categories
 
-| Category          | Tests | Example Cases                 |
-|-------------------|-------|-------------------------------|
-| SAM/BAM/CRAM      | 42    | Mapped pairs, QC failures     |
-| FASTQ             | 12    | GZIP files, mixed read lengths|
-| Special Cases     | 14    | Empty reads, circular genomes |
+```text
+SAM/BAM/CRAM (42)       FASTQ (12)
+├─ Mapped Pairs        ├─ Paired End
+├─ Alignment Flags     ├─ Single End  
+├─ CIGAR Operations    ├─ Compression
+├─ Optional Tags       └─ Read Types
+└─ Format Conversions
+
+Special Cases (14)
+├─ Empty Reads
+├─ Circular References
+├─ Edge Case Handling
+└─ Boundary Conditions
+```
 
 ## Customization  
 Modify `config.py` to:  
