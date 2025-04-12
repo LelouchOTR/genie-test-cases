@@ -3,8 +3,8 @@
 Generates standardized test files for validating bioinformatics tools. Contains 54 pre-built scenarios covering common edge cases and format requirements.
 
 ```text
-SAM/BAM/CRAM (42)      FASTQ (12)       
-█████████████████████  ████████████
+SAM/BAM/CRAM (42)                  FASTQ (12)       
+█████████████████████              ████████████
 │─ Core Alignment Tests (28)       ├─ Core FASTQ (10)
 │─ Special Cases* (14)             ╰─ Compression (2)
 ╰─ Format Conversions (4)
