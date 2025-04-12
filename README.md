@@ -3,16 +3,20 @@
 Generates standardized test files for validating bioinformatics tools. Contains 54 pre-built scenarios covering common edge cases and format requirements.
 
 ```text
-SAM/BAM/CRAM (42)      FASTQ (12)        Special (14)
-█████████████████████  ████████████      ████████████
-Mapped Pairs (18)      Paired End (6)    Empty Reads (4)
-Flags/Formats (24)     Compression (2)   Edge Cases (10)
+SAM/BAM/CRAM (42)      FASTQ (12)       
+█████████████████████  ████████████
+│─ Core Alignment Tests (28)       │─ Core FASTQ (10)
+│─ Special Cases* (14)             ╰─ Compression (2)
+╰─ Format Conversions (4)
+
+*Special cases include: Empty reads, circular references, 
+ edge cases, and boundary conditions
 ```
 
 ## Key Features
 
 ```plaintext
-📂 42 alignment tests        🔍 12 FASTQ variations
+📂 54 total tests (42 alignments + 12 FASTQ)
 🔄 Reproducible outputs      🧬 3 reference genomes
 📊 Metadata documentation   🐍 Python-powered
 ```
@@ -42,18 +46,22 @@ test_data/
 ## Test Categories
 
 ```text
-SAM/BAM/CRAM (42)       FASTQ (12)
-├─ Mapped Pairs        ├─ Paired End
-├─ Alignment Flags     ├─ Single End  
-├─ CIGAR Operations    ├─ Compression
-├─ Optional Tags       └─ Read Types
-└─ Format Conversions
-
-Special Cases (14)
-├─ Empty Reads
-├─ Circular References
-├─ Edge Case Handling
-└─ Boundary Conditions
+SAM/BAM/CRAM (42)              FASTQ (12)
+├─ Core Alignment Features     ├─ Read Types
+│  ├─ Mapped Pairs            ├─ Paired/Single End  
+│  ├─ Alignment Flags         ├─ Quality Scores
+│  ├─ CIGAR Operations        ╰─ Compression
+│  ╰─ Optional Tags
+│
+├─ Special Cases
+│  ├─ Empty Reads
+│  ├─ Circular References
+│  ├─ Edge Cases
+│  ╰─ Boundary Conditions
+│
+╰─ Format Support
+   ├─ SAM/BAM/CRAM Input
+   ╰─ SAM/BAM/CRAM Output
 ```
 
 ## Customization  
@@ -61,6 +69,13 @@ Modify `config.py` to:
 - Change output locations  
 - Select specific test cases  
 - Adjust reference genomes
+
+## Composition Note
+The 54 total tests include:
+- 28 core alignment scenarios
+- 14 special case tests (integrated with alignment formats)
+- 12 FASTQ variations
+- 4 format conversion tests
 
 ## Why This Matters  
 Properly formatted test data helps catch tool errors before real data analysis. This suite validates:  
