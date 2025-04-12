@@ -6,7 +6,7 @@ channels:
   - defaults
 dependencies:
   - python=3.12       # Updated to Python 3.12
-  - pysam=0.23        # Pinned to specific version
+  - pysam=0.23.0        # Pinned to specific version
   - tqdm>=4.66.0      # Added with minimum version
   - colorama>=0.4.6   # Added for terminal formatting
   - pip               # Maintained for any pip-only needs
