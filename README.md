@@ -19,21 +19,25 @@ Flags/Formats (24)     Compression (2)   Edge Cases (10)
 
 ## Quick Start
 
-**Prerequisites**  
-- Python 3.8+  
-- `pysam` library (`pip install pysam`)
+**1. Create Conda Environment**
+```bash
+conda env create -f environment.yml
+conda activate genie-test-wsl
+```
 
-**Generate All Tests**  
+**2. Generate Test Files**
 ```bash
 python -m test_data_generator.generate_tests
 ```
 
-Files appear in:  
-`test_data/  
-├── SAM_01/  
+**Output Structure**
+```text
+test_data/
+├── SAM_01/          # SAM format tests
 ├── SAM_02/  
-...  
-└── FASTQ_12/`
+...
+└── FASTQ_12/        # FASTQ edge cases
+```
 
 ## Test Categories
 
