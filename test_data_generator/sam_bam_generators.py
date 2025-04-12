@@ -128,7 +128,7 @@ def generate_sam_03(output_dir: Path, **kwargs):
         r1.mapping_quality = 60
         r1.cigarstring = f"{read_len}M"
         # Mate is unmapped, R2, same ref, pos=0 (convention)
-        set_mate_info(r1, header, mate_ref_name=ref_name, mate_start=-1, mate_is_unmapped=True, mate_is_reverse=False)
+        set_mate_info(r1, header, mate_ref_name="*", mate_start=0, mate_is_unmapped=True, mate_is_reverse=False)
         # Flags: 0x1 (paired) + 0x8 (mate unmapped) + 0x40 (R1) = 73
         r1.flag = 73
         samfile.write(r1)
@@ -140,8 +140,7 @@ def generate_sam_03(output_dir: Path, **kwargs):
         set_paired_flags(r2, is_read1=False)
         r2.is_unmapped = True
         # Mate is mapped, R1, same ref, pos=map_pos
-        set_mate_info(r2, header, mate_ref_name=ref_name, mate_start=map_pos, mate_is_unmapped=False,
-mate_is_reverse=False)
+        set_mate_info(r2, header, mate_ref_name="*", mate_start=0, mate_is_unmapped=True, mate_is_reverse=False)
         # Flags: 0x1 (paired) + 0x4 (read unmapped) + 0x80 (R2) = 133
         r2.flag = 133
         samfile.write(r2)
@@ -1094,7 +1093,10 @@ def generate_sam_21(output_dir: Path, **kwargs):
         r1.query_qualities = pysam.qualitystring_to_array("!" * 10)
         r1.flag = 0x1 + 0x4 + 0x8 # Paired, Unmapped, Mate Unmapped
         # Mate position often set to self if unmapped
-        set_mate_info(r1, header, mate_ref_name=None, mate_start=-1, mate_is_unmapped=True, mate_is_reverse=False)
+        r1.next_reference_id = -1  # *
+        r1.next_reference_start = 0
+        r1.mate_is_unmapped = True
+        r1.mate_is_reverse = False
         samfile.write(r1)
 
     # tqdm.write(f"{Fore.GREEN}   {file_path}")
@@ -1295,6 +1297,7 @@ def generate_sam_26(output_dir: Path, **kwargs):
         r1.reference_start = start_pos
         r1.mapping_quality = 60
         r1.cigarstring = f"{exon1_len}M{intron_len}N{exon2_len}M"
+        r1.set_tag('SA', f"ref1,85,+,25M,60,0;", 'Z')
         r1.flag = 0
         samfile.write(r1)
 
@@ -1846,11 +1849,56 @@ def generate_sam_39(output_dir: Path, **kwargs):
     # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_40(output_dir: Path, **kwargs):
-    """SAM_40: (bam output) - Generate SAM"""
-    # This case expects the *tool under test* to produce bam output.
-    # So we just provide a standard sam file as input.
-    # Reuse SAM_04 generator.
-    generate_sam_04(output_dir, **kwargs)
+    """SAM_40: (bam output) - Generate BAM"""
+    file_path = output_dir / "alignment.bam"
+    ref_path = utils.copy_reference_to_output(output_dir)
+    header = utils.get_default_sam_header()
+    ref_name = "ref1"
+    ref_id = header.references.index(ref_name)
+    read_len = 12
+
+    with pysam.AlignmentFile(str(file_path), "wb", header=header) as bamfile:
+        # Read 1 (matches ref1 start)
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            seq = fasta.fetch(ref_name, 0, read_len).upper()
+        r1 = pysam.AlignedSegment()
+        r1.query_name = "mapped_se_1"
+        r1.query_sequence = seq
+        r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
+        r1.reference_id = ref_id
+        r1.reference_start = 0
+        r1.mapping_quality = 60
+        r1.cigarstring = f"{read_len}M"
+        r1.flag = 0
+        bamfile.write(r1)
+
+        # Read 2 (matches ref1 elsewhere, reverse strand)
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            seq = fasta.fetch(ref_name, 50, 50 + read_len).upper()
+        r2 = pysam.AlignedSegment()
+        r2.query_name = "mapped_se_2"
+        r2.query_sequence = seq.translate(str.maketrans('ACGTacgt', 'TGCAtgca'))[::-1]
+        r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
+        r2.reference_id = ref_id
+        r2.reference_start = 50
+        r2.mapping_quality = 60
+        r2.cigarstring = f"{read_len}M"
+        r2.flag = 16
+        bamfile.write(r2)
+
+        # Read 3 (matches ref2 start)
+        with pysam.FastaFile(str(ref_path)) as fasta:
+            seq = fasta.fetch(ref_name, 0, read_len).upper()
+        r3 = pysam.AlignedSegment()
+        r3.query_name = "mapped_se_3"
+        r3.query_sequence = seq
+        r3.query_qualities = pysam.qualitystring_to_array("$" * read_len)
+        r3.reference_id = header.references.index("ref2")
+        r3.reference_start = 0
+        r3.mapping_quality = 60
+        r3.cigarstring = f"{read_len}M"
+        r3.flag = 0
+        bamfile.write(r3)
     # tqdm.write(f"{Fore.GREEN}  Note: Generated standard alignment.sam for testing bam output capability.")
 
 def generate_sam_41(output_dir: Path, **kwargs):
