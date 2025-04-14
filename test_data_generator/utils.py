@@ -2,6 +2,7 @@ import os
 import pysam
 from pathlib import Path
 import shutil
+import textwrap
 
 # Define the path to the reference file relative to this utils file
 
@@ -98,18 +99,22 @@ def write_readme(output_dir: Path, case_config: dict) -> None:
                      specific test case (from config.TEST_CASES).
     """
     readme_path = output_dir / "README.md"
-    content = f"""## Test Case: {case_config['name']}
+    # Use textwrap.dedent to allow cleaner indentation in the source code
+    content = textwrap.dedent(f"""\
+        ## Test Case: {case_config['name']}
 
-**Description:** {case_config['description']}
+        **Description:** {case_config['description']}
 
-**Format:** {case_config['format']}
+        **Format:** {case_config['format']}
+    """)
 
-**Generated Files:**
-"""
+    # Manually add the generated files list, ensuring correct formatting
+    content += "\n**Generated Files:**\n"
     for filename in case_config.get('output_files', ['N/A']):
         content += f"- `{filename}`\n"
 
     if 'notes' in case_config:
+        # Add notes with proper spacing
         content += f"\n**Notes:**\n{case_config['notes']}\n"
 
     with open(readme_path, 'w') as f:
