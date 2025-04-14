@@ -1,7 +1,7 @@
-"""Utility functions for test data generation."""
+"""Configuration for test data generation."""
 from pathlib import Path
 
-# Base directory where test data will be generated
+# Base directory where test data will be generated (relative to project root)
 BASE_OUTPUT_DIR = Path("test_data")
 
 # Test case configurations
