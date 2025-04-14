@@ -38,7 +38,10 @@ def _generate_large_reference_file(ref_path: Path):
 def ensure_reference_exists(ref_name: str):
     """
     Checks if a reference file exists in the reference source directory.
-    If not, generates it (currently only supports 'large_ref.fa').
+    If not, generates it (only supports 'large_ref.fa' auto-generation).
+    
+    Note: 'simple_ref.fa' must exist in the reference directory as it is
+    required for default test cases and is not auto-generated.
     """
     ref_dir = _THIS_DIR / "reference"
     ref_path = ref_dir / ref_name

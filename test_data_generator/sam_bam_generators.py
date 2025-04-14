@@ -106,8 +106,7 @@ def generate_sam_02(output_dir: Path, **kwargs):
 def generate_sam_03(output_dir: Path, **kwargs):
     """SAM_03: Half-mapped read pair"""
     file_path = output_dir / "alignment.sam"
-    # Use special large reference specified in test case params
-    ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
+    ref_path = utils.copy_reference_to_output(output_dir)  # Use default simple_ref.fa
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
