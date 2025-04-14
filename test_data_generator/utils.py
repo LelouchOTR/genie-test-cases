@@ -88,8 +88,7 @@ def create_fastq_entry(read_id: str, sequence: str, quality: str, comment: str =
 
 def get_default_sam_header() -> pysam.AlignmentHeader:
     """Creates a basic pysam AlignmentHeader using the default reference."""
-    if not REFERENCE_FASTA_PATH.exists():
-        raise FileNotFoundError(f"Reference FASTA not found at: {REFERENCE_FASTA_PATH}")
+    ensure_reference_exists("simple_ref.fa")
     
     # Create header directly from the reference FASTA
     with pysam.FastaFile(str(REFERENCE_FASTA_PATH)) as fasta:
