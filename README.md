@@ -32,12 +32,12 @@ Properly formatted test data helps catch tool errors before real data analysis. 
 **1. Create Conda Environment**
 ```bash
 conda env create -f environment.yml
-conda activate genie-test-wsl
+conda activate genie-test
 ```
 
 **2. Generate Test Files**
 ```bash
-python -m test_data_generator.generate_tests
+python -m test_data_generator.generate
 ```
 
 **Output Structure**
