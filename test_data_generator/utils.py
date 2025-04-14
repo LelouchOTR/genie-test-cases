@@ -7,12 +7,16 @@ import shutil
 
 def _generate_large_reference_file(ref_path: Path) -> None:
     """Generates a large reference FASTA file (large_ref.fa) and its index.
-    
-    Creates a repetitive sequence to efficiently generate a large reference file.
-    The file will be ~1Mbp in size with ACGT repeats.
-    
+
+    Creates a repetitive sequence (~1Mbp ACGT repeats) to efficiently generate
+    a large reference file and then indexes it using pysam.faidx.
+
     Args:
-        ref_path: Path where the reference file should be created
+        ref_path: The full path where the reference FASTA file should be created.
+                  The index file (.fai) will be created alongside it.
+
+    Raises:
+        RuntimeError: If the file generation or indexing fails.
     """
     """Generates the large_ref.fa file and its index."""
     # Create repetitive sequence to make a large file
@@ -76,10 +80,10 @@ _THIS_DIR = Path(__file__).parent
 REFERENCE_FASTA_PATH = _THIS_DIR / "reference" / "simple_ref.fa"
 
 def ensure_dir(dir_path: Path) -> None:
-    """Creates a directory if it doesn't exist.
-    
+    """Creates a directory if it doesn't exist, including parent directories.
+
     Args:
-        dir_path: Path of directory to create
+        dir_path: The pathlib.Path object representing the directory to create.
     """
     """Creates a directory if it doesn't exist."""
     dir_path.mkdir(parents=True, exist_ok=True)
