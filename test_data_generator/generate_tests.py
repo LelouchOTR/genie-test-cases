@@ -70,8 +70,6 @@ def main():
     print(Style.RESET_ALL)
 
 if __name__ == "__main__":
-    # Change working directory to the script's directory to ensure consistent
-    # relative path resolution for reference files and output directories,
-    # regardless of where the script is invoked from.
-    os.chdir(Path(__file__).parent)
+    # Ensure script is run from the project root for correct path resolution
+    # (e.g., python -m test_data_generator.generate)
     main()
