@@ -44,13 +44,21 @@ def _generate_large_reference_file(ref_path: Path) -> None:
         # If generation fails, raise an error to stop the process clearly.
         raise RuntimeError(f"Failed to generate large reference {ref_path}: {e}") from e
 
-def ensure_reference_exists(ref_name: str):
-    """
-    Checks if a reference file exists in the reference source directory.
-    If not, generates it (only supports 'large_ref.fa' auto-generation).
-    
-    Note: 'simple_ref.fa' must exist in the reference directory as it is
-    required for default test cases and is not auto-generated.
+def ensure_reference_exists(ref_name: str) -> None:
+    """Checks if a reference FASTA and its index exist, generating if needed.
+
+    Verifies the presence of the specified reference FASTA file and its '.fai'
+    index in the 'reference/' directory. If `ref_name` is 'large_ref.fa' and
+    it or its index is missing, it calls `_generate_large_reference_file`.
+    For other missing reference files, it raises an error.
+
+    Args:
+        ref_name: The base name of the reference file (e.g., "simple_ref.fa").
+
+    Raises:
+        FileNotFoundError: If a required reference (other than 'large_ref.fa')
+                           or its index is not found.
+        RuntimeError: If generation of 'large_ref.fa' fails.
     """
     ref_dir = _THIS_DIR / "reference"
     ref_path = ref_dir / ref_name
@@ -76,7 +84,7 @@ def ensure_dir(dir_path: Path) -> None:
     """Creates a directory if it doesn't exist."""
     dir_path.mkdir(parents=True, exist_ok=True)
 
-def write_readme(output_dir: Path, case_config: dict):
+def write_readme(output_dir: Path, case_config: dict) -> None:
     """Creates a README.md file in the output directory describing the test case."""
     readme_path = output_dir / "README.md"
     content = f"""## Test Case: {case_config['name']}
@@ -97,14 +105,34 @@ def write_readme(output_dir: Path, case_config: dict):
         f.write(content)
 
 def create_fastq_entry(read_id: str, sequence: str, quality: str, comment: str = "") -> str:
-    """Formats a single FASTQ entry."""
+    """Formats a single FASTQ entry as a string.
+
+    Args:
+        read_id: The read identifier (without the starting '@').
+        sequence: The nucleotide sequence.
+        quality: The Phred quality score string. Must be same length as sequence.
+        comment: Optional comment to append after the read ID.
+
+    Returns:
+        A string formatted as a complete 4-line FASTQ entry.
+
+    Raises:
+        ValueError: If the sequence and quality strings have different lengths.
+    """
     if len(sequence) != len(quality):
         raise ValueError(f"Sequence length ({len(sequence)}) and quality length ({len(quality)}) must match for read {read_id}")
     comment_str = f" {comment}" if comment else ""
     return f"@{read_id}{comment_str}\n{sequence}\n+\n{quality}\n"
 
 def get_default_sam_header() -> pysam.AlignmentHeader:
-    """Creates a basic pysam AlignmentHeader using the default reference."""
+    """Creates a basic pysam AlignmentHeader using the default 'simple_ref.fa'.
+
+    Ensures 'simple_ref.fa' exists, then reads its sequence names and lengths
+    to construct a minimal SAM header dictionary suitable for pysam.
+
+    Returns:
+        A pysam.AlignmentHeader object based on 'simple_ref.fa'.
+    """
     ensure_reference_exists("simple_ref.fa")
     
     # Create header directly from the reference FASTA
@@ -133,7 +161,23 @@ def reverse_complement(seq: str) -> str:
     return ''.join([complement.get(base, 'N') for base in reversed(seq)])
 
 def copy_reference_to_output(output_dir: Path, ref_name: str = "simple_ref.fa") -> Path:
-    """Copies the specified reference FASTA to the output directory."""
+    """Copies the specified reference FASTA and its index files to the output directory.
+
+    Finds the reference FASTA in the 'reference/' source directory and copies it
+    to the target `output_dir`. Also copies associated index files
+    (e.g., .fai, .amb, .ann, .bwt, .pac, .sa) if they exist.
+
+    Args:
+        output_dir: The destination directory for the reference file(s).
+        ref_name: The base name of the reference FASTA file to copy.
+
+    Returns:
+        The pathlib.Path object representing the copied reference FASTA file
+        in the output directory.
+
+    Raises:
+        FileNotFoundError: If the source reference FASTA file does not exist.
+    """
     src_path = _THIS_DIR / "reference" / ref_name
     dest_path = output_dir / src_path.name
     

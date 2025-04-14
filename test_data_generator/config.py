@@ -1,12 +1,4 @@
-"""Configuration for test data generation.
-
-Defines the base output directory and test case specifications for generating
-SAM/BAM/CRAM and FASTQ test files. Each test case specifies:
-- ID and description
-- Output format and files
-- Generator function to call
-- Any special parameters
-"""
+"""Utility functions for test data generation."""
 from pathlib import Path
 
 # Base directory where test data will be generated
