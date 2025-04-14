@@ -18,7 +18,6 @@ def _generate_large_reference_file(ref_path: Path) -> None:
     Raises:
         RuntimeError: If the file generation or indexing fails.
     """
-    """Generates the large_ref.fa file and its index."""
     # Create repetitive sequence to make a large file
     repeat_unit = "ACGT" * 250  # 1000 bp repeat unit
     num_repeats = 1000          # 1000 * 1000 = 1,000,000 bp
