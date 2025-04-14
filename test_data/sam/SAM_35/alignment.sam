@@ -1,5 +1,0 @@
-@HD	VN:1.6	SO:unsorted
-@SQ	SN:ref1	LN:200
-@SQ	SN:ref2	LN:200
-revcomp_long_FR	97	ref1	6	60	15M	=	141	150	AAAAAAAAAAAAAAA	!!!!!!!!!!!!!!!
-revcomp_long_FR	145	ref1	141	60	15M	=	6	-150	TTTTTTTTTTTTTTT	###############

@@ -1,5 +1,0 @@
-@HD	VN:1.6	SO:unsorted
-@SQ	SN:ref1	LN:200
-@SQ	SN:ref2	LN:200
-samepos_pair	67	ref1	21	60	15M	=	21	15	AAAAAAAAAAAAAAA	!!!!!!!!!!!!!!!
-samepos_pair	131	ref1	21	60	15M	=	21	-15	TTTTTTTTTTTTTTT	###############
