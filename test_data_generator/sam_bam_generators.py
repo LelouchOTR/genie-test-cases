@@ -454,6 +454,7 @@ mate_is_reverse=False)
 def generate_sam_09(output_dir: Path, **kwargs):
     """SAM_09: Mapped read pair - long distance + TLEN (>1M bases)"""
     file_path = output_dir / "alignment.sam"
+    utils.ensure_reference_exists("large_ref.fa")
     ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
     
     with pysam.FastaFile(str(ref_path)) as fasta:

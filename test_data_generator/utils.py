@@ -4,6 +4,54 @@ from pathlib import Path
 import shutil
 
 # Define the path to the reference file relative to this utils file
+
+def _generate_large_reference_file(ref_path: Path):
+    """Generates the large_ref.fa file and its index."""
+    # Create repetitive sequence to make a large file
+    repeat_unit = "ACGT" * 250  # 1000 bp repeat unit
+    num_repeats = 1000          # 1000 * 1000 = 1,000,000 bp
+    description = ">large_ref\n" # Simplified description
+
+    try:
+        ref_path.parent.mkdir(parents=True, exist_ok=True) # Ensure parent dir exists
+        with open(ref_path, "w") as f:
+            f.write(description)
+            current_len = 0
+            line_len = 80 # Standard FASTA line length
+            for _ in range(num_repeats):
+                f.write(repeat_unit)
+                current_len += len(repeat_unit)
+                # Add newlines for standard FASTA formatting
+                if current_len >= line_len:
+                    f.write("\n")
+                    current_len = 0
+            # Ensure the file ends with a newline if needed
+            if current_len > 0:
+                 f.write("\n")
+
+        # Create FASTA index silently
+        pysam.faidx(str(ref_path))
+    except Exception as e:
+        # If generation fails, raise an error to stop the process clearly.
+        raise RuntimeError(f"Failed to generate large reference {ref_path}: {e}") from e
+
+def ensure_reference_exists(ref_name: str):
+    """
+    Checks if a reference file exists in the reference source directory.
+    If not, generates it (currently only supports 'large_ref.fa').
+    """
+    ref_dir = _THIS_DIR / "reference"
+    ref_path = ref_dir / ref_name
+    ref_index_path = ref_path.with_suffix(ref_path.suffix + '.fai')
+
+    # Check if both the FASTA and its index exist
+    if not ref_path.exists() or not ref_index_path.exists():
+        if ref_name == "large_ref.fa":
+            # Generation happens here if needed. No print statements to keep tqdm clean.
+            _generate_large_reference_file(ref_path)
+        else:
+            # Raise an error if a non-large reference is missing, as we don't auto-generate others.
+             raise FileNotFoundError(f"Required reference file '{ref_name}' not found in {ref_dir} and cannot be auto-generated.")
 _THIS_DIR = Path(__file__).parent
 REFERENCE_FASTA_PATH = _THIS_DIR / "reference" / "simple_ref.fa"
 
