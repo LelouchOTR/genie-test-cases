@@ -70,6 +70,8 @@ SAM/BAM/CRAM (42)              FASTQ (12)
    ╰─ SAM/BAM/CRAM Output
 ```
 
+**Detailed test case descriptions:** [test_cases_descriptions.md](test_cases_descriptions.md)
+
 ## Customization  
 Modify `config.py` to:  
 - Change output locations  
