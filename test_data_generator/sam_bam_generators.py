@@ -5,7 +5,13 @@ from tqdm import tqdm
 from colorama import Fore
 
 # Helper function for setting common paired flags
-def set_paired_flags(segment: pysam.AlignedSegment, is_read1: bool):
+def set_paired_flags(segment: pysam.AlignedSegment, is_read1: bool) -> None:
+    """Sets the paired-end flags on a pysam AlignedSegment.
+    
+    Args:
+        segment: The segment to modify
+        is_read1: Whether this is read1 (True) or read2 (False)
+    """
     segment.is_paired = True
     segment.is_read1 = is_read1
     segment.is_read2 = not is_read1
@@ -13,7 +19,17 @@ def set_paired_flags(segment: pysam.AlignedSegment, is_read1: bool):
 # Helper function for setting mate info
 def set_mate_info(segment: pysam.AlignedSegment, header: pysam.AlignmentHeader,
                   mate_ref_name: str | None, mate_start: int,
-                  mate_is_unmapped: bool, mate_is_reverse: bool):
+                  mate_is_unmapped: bool, mate_is_reverse: bool) -> None:
+    """Sets mate information flags and positions on a pysam AlignedSegment.
+    
+    Args:
+        segment: The segment to modify
+        header: The SAM header for reference name resolution
+        mate_ref_name: Name of mate's reference sequence (None if unmapped)
+        mate_start: Mate's start position (-1 if unmapped)
+        mate_is_unmapped: Whether mate is unmapped
+        mate_is_reverse: Whether mate is on reverse strand
+    """
     segment.mate_is_unmapped = mate_is_unmapped
     segment.mate_is_reverse = mate_is_reverse
     

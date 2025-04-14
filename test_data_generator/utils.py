@@ -5,7 +5,15 @@ import shutil
 
 # Define the path to the reference file relative to this utils file
 
-def _generate_large_reference_file(ref_path: Path):
+def _generate_large_reference_file(ref_path: Path) -> None:
+    """Generates a large reference FASTA file (large_ref.fa) and its index.
+    
+    Creates a repetitive sequence to efficiently generate a large reference file.
+    The file will be ~1Mbp in size with ACGT repeats.
+    
+    Args:
+        ref_path: Path where the reference file should be created
+    """
     """Generates the large_ref.fa file and its index."""
     # Create repetitive sequence to make a large file
     repeat_unit = "ACGT" * 250  # 1000 bp repeat unit
@@ -17,7 +25,8 @@ def _generate_large_reference_file(ref_path: Path):
         with open(ref_path, "w") as f:
             f.write(description)
             current_len = 0
-            line_len = 80 # Standard FASTA line length
+            FASTA_LINE_LENGTH = 80  # Standard FASTA line length
+            line_len = FASTA_LINE_LENGTH
             for _ in range(num_repeats):
                 f.write(repeat_unit)
                 current_len += len(repeat_unit)
@@ -58,7 +67,12 @@ def ensure_reference_exists(ref_name: str):
 _THIS_DIR = Path(__file__).parent
 REFERENCE_FASTA_PATH = _THIS_DIR / "reference" / "simple_ref.fa"
 
-def ensure_dir(dir_path: Path):
+def ensure_dir(dir_path: Path) -> None:
+    """Creates a directory if it doesn't exist.
+    
+    Args:
+        dir_path: Path of directory to create
+    """
     """Creates a directory if it doesn't exist."""
     dir_path.mkdir(parents=True, exist_ok=True)
 
@@ -126,8 +140,9 @@ def copy_reference_to_output(output_dir: Path, ref_name: str = "simple_ref.fa") 
     # Copy main FASTA file
     shutil.copy(str(src_path), str(dest_path))
     
-    # Also copy the index if it exists
-    for ext in ['.fai', '.amb', '.ann', '.bwt', '.pac', '.sa']:
+    # Also copy the index files if they exist
+    FASTA_INDEX_EXTENSIONS = ['.fai', '.amb', '.ann', '.bwt', '.pac', '.sa']
+    for ext in FASTA_INDEX_EXTENSIONS:
         index_src = src_path.with_suffix(src_path.suffix + ext)
         if index_src.exists():
             shutil.copy(str(index_src), str(dest_path.with_suffix(dest_path.suffix + ext)))
