@@ -85,11 +85,19 @@ def ensure_dir(dir_path: Path) -> None:
     Args:
         dir_path: The pathlib.Path object representing the directory to create.
     """
-    """Creates a directory if it doesn't exist."""
     dir_path.mkdir(parents=True, exist_ok=True)
 
 def write_readme(output_dir: Path, case_config: dict) -> None:
-    """Creates a README.md file in the output directory describing the test case."""
+    """Creates a README.md file in the output directory describing the test case.
+
+    Uses information from the test case configuration dictionary to generate
+    a descriptive README file.
+
+    Args:
+        output_dir: The directory where the README.md file will be written.
+        case_config: The dictionary containing configuration details for the
+                     specific test case (from config.TEST_CASES).
+    """
     readme_path = output_dir / "README.md"
     content = f"""## Test Case: {case_config['name']}
 
