@@ -1810,6 +1810,19 @@ def generate_sam_41(output_dir: Path, **kwargs):
     header = pysam.AlignmentHeader.from_dict(header_dict)
     ref_id = header.references.index(ref_name) # Get ref_id from the new header
 
+    # --- Add Debug Code: ---
+    print(f"\n--- DEBUG SAM_41 ---")
+    print(f"Output CRAM path: {file_path}")
+    print(f"Reference FASTA path used: {ref_path}")
+    print(f"Reference FASTA exists: {ref_path.exists()}")
+    ref_fai_path = ref_path.with_suffix(ref_path.suffix + '.fai')
+    print(f"Reference FASTA index path: {ref_fai_path}")
+    print(f"Reference FASTA index exists: {ref_fai_path.exists()}")
+    print(f"Reference URI in header: {ref_uri}")
+    print(f"Header dict used: {header_dict}")
+    print(f"--- END DEBUG SAM_41 ---\n")
+    # --- End Debug Code ---
+
     # Use 'wc' mode for CRAM output, provide reference path
     with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=str(ref_path)) as cramfile:
         # Add a simple mapped read (similar to generate_sam_04)
