@@ -1,5 +1,6 @@
 from pathlib import Path
 import pysam
+import hashlib
 from . import utils # Relative import
 from tqdm import tqdm
 from colorama import Fore
@@ -1799,13 +1800,20 @@ def generate_sam_41(output_dir: Path, **kwargs):
     read_len = 12
 
     # Generate header specifically from the copied reference file
+    references_with_checksums = []
     with pysam.FastaFile(str(ref_path)) as fasta:
-        references = [(name, fasta.get_reference_length(name))
-                     for name in fasta.references]
+        for name in fasta.references:
+            length = fasta.get_reference_length(name)
+            sequence = fasta.fetch(name).upper() # Fetch the sequence
+            checksum = hashlib.md5(sequence.encode()).hexdigest() # Calculate MD5
+            references_with_checksums.append((name, length, checksum)) # Store name, length, checksum
+
     ref_uri = ref_path.absolute().as_uri() # Use the copied ref_path URI
     header_dict = {
         'HD': {'VN': '1.6', 'SO': 'unsorted'},
-        'SQ': [{'SN': name, 'LN': length, 'UR': ref_uri} for name, length in references]
+        # Update SQ list comprehension to include M5 tag
+        'SQ': [{'SN': name, 'LN': length, 'UR': ref_uri, 'M5': checksum}
+               for name, length, checksum in references_with_checksums]
     }
     header = pysam.AlignmentHeader.from_dict(header_dict)
     ref_id = header.references.index(ref_name) # Get ref_id from the new header
