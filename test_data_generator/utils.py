@@ -71,11 +71,30 @@ def ensure_reference_exists(ref_name: str) -> None:
     # Check if both the FASTA and its index exist
     if not ref_path.exists() or not ref_index_path.exists():
         if ref_name == "large_ref.fa":
-            # Generation happens here if needed. No print statements to keep tqdm clean.
-            _generate_large_reference_file(ref_path)
+            if not ref_path.exists():
+                print(f"Generating large reference file: {ref_path}...")
+                _generate_large_reference_file(ref_path)  # This also creates the index
+            elif not ref_index_path.exists():
+                # Should be created by _generate_large_reference_file, but index might have been deleted
+                print(f"Generating index for existing large reference file: {ref_path}...")
+                try:
+                    pysam.faidx(str(ref_path))
+                except Exception as e:
+                    raise RuntimeError(f"Failed to generate index for {ref_path}: {e}") from e
         else:
-            # Raise an error if a non-large reference is missing, as we don't auto-generate others.
-             raise FileNotFoundError(f"Required reference file '{ref_name}' not found in {ref_dir} and cannot be auto-generated.")
+            # For non-large references, check if the FASTA exists first
+            if not ref_path.exists():
+                raise FileNotFoundError(f"Required reference file '{ref_name}' not found in {ref_dir}.")
+            # If FASTA exists but index doesn't, try to create the index
+            elif not ref_index_path.exists():
+                print(f"Index file '{ref_index_path.name}' not found. Attempting to create index for {ref_name}...")
+                try:
+                    pysam.faidx(str(ref_path))
+                    print(f"Successfully created index: {ref_index_path.name}")
+                except Exception as e:
+                    raise RuntimeError(f"Failed to create index for {ref_name}: {e}") from e
+
+
 _THIS_DIR = Path(__file__).parent
 REFERENCE_FASTA_PATH = _THIS_DIR / "reference" / "simple_ref.fa"
 
