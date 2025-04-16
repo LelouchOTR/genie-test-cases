@@ -3,6 +3,7 @@ import pysam
 from pathlib import Path
 import shutil
 import textwrap
+from tqdm import tqdm
 
 # Define the path to the reference file relative to this utils file
 
@@ -72,11 +73,11 @@ def ensure_reference_exists(ref_name: str) -> None:
     if not ref_path.exists() or not ref_index_path.exists():
         if ref_name == "large_ref.fa":
             if not ref_path.exists():
-                print(f"Generating large reference file: {ref_path}...")
+                tqdm.write(f"Generating large reference file: {ref_path}...")
                 _generate_large_reference_file(ref_path)  # This also creates the index
             elif not ref_index_path.exists():
                 # Should be created by _generate_large_reference_file, but index might have been deleted
-                print(f"Generating index for existing large reference file: {ref_path}...")
+                tqdm.write(f"Generating index for existing large reference file: {ref_path}...")
                 try:
                     pysam.faidx(str(ref_path))
                 except Exception as e:
@@ -87,10 +88,10 @@ def ensure_reference_exists(ref_name: str) -> None:
                 raise FileNotFoundError(f"Required reference file '{ref_name}' not found in {ref_dir}.")
             # If FASTA exists but index doesn't, try to create the index
             elif not ref_index_path.exists():
-                print(f"Index file '{ref_index_path.name}' not found. Attempting to create index for {ref_name}...")
+                tqdm.write(f"Index file '{ref_index_path.name}' not found. Attempting to create index for {ref_name}...")
                 try:
                     pysam.faidx(str(ref_path))
-                    print(f"Successfully created index: {ref_index_path.name}")
+                    tqdm.write(f"Successfully created index: {ref_index_path.name}")
                 except Exception as e:
                     raise RuntimeError(f"Failed to create index for {ref_name}: {e}") from e
 
