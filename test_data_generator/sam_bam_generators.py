@@ -1801,42 +1801,30 @@ def generate_sam_41(output_dir: Path, **kwargs):
     ref_name = "ref1"
     read_len = 12
 
-    # Generate header specifically from the copied reference file
+    # --- Modify Code: Consolidate FastaFile access ---
     references_with_checksums = []
+    seq_r1 = None
+    seq_r2 = None
+    # Open FASTA file once to get checksums and required sequences
     with pysam.FastaFile(str(ref_path)) as fasta:
         for name in fasta.references:
             length = fasta.get_reference_length(name)
-            sequence = fasta.fetch(name).upper() # Fetch the sequence
+            sequence = fasta.fetch(name).upper() # Fetch the sequence for checksum
             checksum = hashlib.md5(sequence.encode()).hexdigest() # Calculate MD5
             references_with_checksums.append((name, length, checksum)) # Store name, length, checksum
 
-    ref_uri = ref_path.absolute().as_uri() # Use the copied ref_path URI
+        # Fetch sequences needed for reads within the same context
+        seq_r1 = fasta.fetch(ref_name, 0, read_len).upper()
+        seq_r2 = fasta.fetch(ref_name, 50, 50 + read_len).upper()
+
+    ref_uri = ref_path.absolute().as_uri()
     header_dict = {
         'HD': {'VN': '1.6', 'SO': 'unsorted'},
-        # Update SQ list comprehension to include M5 tag
         'SQ': [{'SN': name, 'LN': length, 'UR': ref_uri, 'M5': checksum}
                for name, length, checksum in references_with_checksums]
     }
     header = pysam.AlignmentHeader.from_dict(header_dict)
-    ref_id = header.references.index(ref_name) # Get ref_id from the new header
-
-    # Pre-fetch sequences needed for reads
-    with pysam.FastaFile(str(ref_path)) as fasta:
-        seq_r1 = fasta.fetch(ref_name, 0, read_len).upper()
-        seq_r2 = fasta.fetch(ref_name, 50, 50 + read_len).upper()
-
-    # --- Add Debug Code: ---
-    print(f"\n--- DEBUG SAM_41 ---")
-    print(f"Output CRAM path: {file_path}")
-    print(f"Reference FASTA path used: {ref_path}")
-    print(f"Reference FASTA exists: {ref_path.exists()}")
-    ref_fai_path = ref_path.with_suffix(ref_path.suffix + '.fai')
-    print(f"Reference FASTA index path: {ref_fai_path}")
-    print(f"Reference FASTA index exists: {ref_fai_path.exists()}")
-    print(f"Reference URI in header: {ref_uri}")
-    print(f"Header dict used: {header_dict}")
-    print(f"--- END DEBUG SAM_41 ---\n")
-    # --- End Debug Code ---
+    ref_id = header.references.index(ref_name)
 
     # Use 'wc' mode for CRAM output, provide absolute reference path
     with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=str(ref_path.absolute())) as cramfile:
