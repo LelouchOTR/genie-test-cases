@@ -222,8 +222,8 @@ def copy_reference_to_output(output_dir: Path, ref_name: str = "simple_ref.fa") 
     # Copy main FASTA file
     shutil.copy(str(src_path), str(dest_path))
     
-    # Also copy the index files if they exist
-    FASTA_INDEX_EXTENSIONS = ['.fai', '.amb', '.ann', '.bwt', '.pac', '.sa']
+    # Also copy other index files (like BWA) if they exist, but NOT .fai
+    FASTA_INDEX_EXTENSIONS = ['.amb', '.ann', '.bwt', '.pac', '.sa'] # Removed '.fai'
     for ext in FASTA_INDEX_EXTENSIONS:
         index_src = src_path.with_suffix(src_path.suffix + ext)
         if index_src.exists():

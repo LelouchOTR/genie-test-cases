@@ -1800,6 +1800,16 @@ def generate_sam_41(output_dir: Path, **kwargs):
     ref_name = "ref1"
     read_len = 12
 
+    # --- Regenerate FAI index for the copied FASTA ---
+    try:
+        print(f"{Fore.MAGENTA}DEBUG SAM_41: Regenerating FASTA index for: {ref_path.absolute()}...{Fore.RESET}")
+        pysam.faidx(str(ref_path.absolute()))
+        print(f"{Fore.MAGENTA}DEBUG SAM_41: FASTA index regenerated successfully.{Fore.RESET}")
+    except Exception as e:
+        print(f"{Fore.RED}DEBUG SAM_41: ERROR regenerating FASTA index: {e}{Fore.RESET}")
+        raise # Stop if index generation fails
+    # --- End FAI regeneration ---
+
     # --- DEBUGGING ---
     print(f"{Fore.YELLOW}DEBUG SAM_41: CRAM file path: {file_path.absolute()}{Fore.RESET}")
     print(f"{Fore.YELLOW}DEBUG SAM_41: Reference FASTA path (used for header): {ref_path.absolute()}{Fore.RESET}")
