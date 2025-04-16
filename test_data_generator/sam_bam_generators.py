@@ -1825,10 +1825,10 @@ def generate_sam_41(output_dir: Path, **kwargs):
         seq_r1 = fasta.fetch(ref_name, 0, read_len).upper()
         seq_r2 = fasta.fetch(ref_name, 50, 50 + read_len).upper()
 
-    ref_uri = ref_path.absolute().as_uri()
+    # Simplified header without UR and M5 tags
     header_dict = {
         'HD': {'VN': '1.6', 'SO': 'unsorted'},
-        'SQ': [{'SN': name, 'LN': length, 'UR': ref_uri, 'M5': checksum}
+        'SQ': [{'SN': name, 'LN': length}
                for name, length, checksum in references_with_checksums]
     }
     header = pysam.AlignmentHeader.from_dict(header_dict)
