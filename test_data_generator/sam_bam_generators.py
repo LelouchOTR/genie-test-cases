@@ -1826,15 +1826,6 @@ def generate_sam_41(output_dir: Path, **kwargs):
     header = pysam.AlignmentHeader.from_dict(header_dict)
     ref_id = header.references.index(ref_name)
 
-    # Explicitly ensure/refresh FASTA index before CRAM write
-    try:
-        print(f"DEBUG: Explicitly indexing {ref_path} before CRAM write...")
-        pysam.faidx(str(ref_path))
-        print(f"DEBUG: Indexing successful.")
-    except Exception as e:
-        print(f"DEBUG: Error during explicit indexing: {e}")
-        raise
-
     # Use 'wc' mode for CRAM output, provide absolute reference path
     with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=str(ref_path.absolute())) as cramfile:
         # Add a simple mapped read (similar to generate_sam_04)
