@@ -175,9 +175,11 @@ def get_default_sam_header() -> pysam.AlignmentHeader:
         references = [(name, fasta.get_reference_length(name)) 
                      for name in fasta.references]
     
+    # Get the absolute path URI for the reference file
+    ref_uri = REFERENCE_FASTA_PATH.absolute().as_uri()
     header_dict = {
         'HD': {'VN': '1.6', 'SO': 'unsorted'},
-        'SQ': [{'SN': name, 'LN': length} for name, length in references]
+        'SQ': [{'SN': name, 'LN': length, 'UR': ref_uri} for name, length in references]
     }
     return pysam.AlignmentHeader.from_dict(header_dict)
 
