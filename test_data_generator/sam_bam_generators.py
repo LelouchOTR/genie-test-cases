@@ -1836,8 +1836,8 @@ def generate_sam_41(output_dir: Path, **kwargs):
     print(f"--- END DEBUG SAM_41 ---\n")
     # --- End Debug Code ---
 
-    # Use 'wc' mode for CRAM output, provide reference path
-    with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=str(ref_path)) as cramfile:
+    # Use 'wc' mode for CRAM output, provide absolute reference path
+    with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=str(ref_path.absolute())) as cramfile:
         # Add a simple mapped read (similar to generate_sam_04)
         r1 = pysam.AlignedSegment()
         r1.query_name = "cram_input_read_1"
@@ -1848,6 +1848,11 @@ def generate_sam_41(output_dir: Path, **kwargs):
         r1.mapping_quality = 60
         r1.cigarstring = f"{read_len}M"
         r1.flag = 0
+        # --- Add Debug Code ---
+        print(f"--- DEBUG SAM_41 (Before write r1) ---")
+        print(f"Ref path exists: {ref_path.exists()}")
+        print(f"Ref FAI path exists: {ref_fai_path.exists()}")
+        # --- End Debug Code ---
         cramfile.write(r1)
 
         r2 = pysam.AlignedSegment()
@@ -1859,6 +1864,11 @@ def generate_sam_41(output_dir: Path, **kwargs):
         r2.mapping_quality = 60
         r2.cigarstring = f"{read_len}M"
         r2.flag = 0
+        # --- Add Debug Code ---
+        print(f"--- DEBUG SAM_41 (Before write r2) ---")
+        print(f"Ref path exists: {ref_path.exists()}")
+        print(f"Ref FAI path exists: {ref_fai_path.exists()}")
+        # --- End Debug Code ---
         cramfile.write(r2)
 
 
