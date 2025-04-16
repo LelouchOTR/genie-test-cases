@@ -1800,6 +1800,15 @@ def generate_sam_41(output_dir: Path, **kwargs):
     ref_name = "ref1"
     read_len = 12
 
+    # --- DEBUGGING ---
+    print(f"{Fore.YELLOW}DEBUG SAM_41: CRAM file path: {file_path.absolute()}{Fore.RESET}")
+    print(f"{Fore.YELLOW}DEBUG SAM_41: Reference FASTA path (used for header): {ref_path.absolute()}{Fore.RESET}")
+    ref_index_path = ref_path.with_suffix(ref_path.suffix + '.fai')
+    print(f"{Fore.YELLOW}DEBUG SAM_41: Expected Reference FAI path: {ref_index_path.absolute()}{Fore.RESET}")
+    print(f"{Fore.YELLOW}DEBUG SAM_41: Does FAI file exist at expected path? {ref_index_path.exists()}{Fore.RESET}")
+    print(f"{Fore.YELLOW}DEBUG SAM_41: Using reference_filename: {str(ref_path.absolute())}{Fore.RESET}")
+    # --- END DEBUGGING ---
+
     # --- Modify Code: Consolidate FastaFile access ---
     references_with_checksums = []
     seq_r1 = None
@@ -1825,8 +1834,8 @@ def generate_sam_41(output_dir: Path, **kwargs):
     header = pysam.AlignmentHeader.from_dict(header_dict)
     ref_id = header.references.index(ref_name)
 
-    # Use 'wc' mode for CRAM output, provide reference filename only (assumes in same dir)
-    with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=ref_path.name) as cramfile:
+    # Use 'wc' mode for CRAM output with absolute reference path
+    with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=str(ref_path.absolute())) as cramfile:
         # Add a simple mapped read (similar to generate_sam_04)
         r1 = pysam.AlignedSegment()
         r1.query_name = "cram_input_read_1"
