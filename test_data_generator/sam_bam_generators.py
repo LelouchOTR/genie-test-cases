@@ -1795,10 +1795,20 @@ def generate_sam_41(output_dir: Path, **kwargs):
     """SAM_41: (cram input) - Generate CRAM"""
     file_path = output_dir / "alignment.cram" # Output CRAM
     ref_path = utils.copy_reference_to_output(output_dir) # Reference is MANDATORY for CRAM
-    header = utils.get_default_sam_header()
     ref_name = "ref1"
-    ref_id = header.references.index(ref_name)
     read_len = 12
+
+    # Generate header specifically from the copied reference file
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        references = [(name, fasta.get_reference_length(name))
+                     for name in fasta.references]
+    ref_uri = ref_path.absolute().as_uri() # Use the copied ref_path URI
+    header_dict = {
+        'HD': {'VN': '1.6', 'SO': 'unsorted'},
+        'SQ': [{'SN': name, 'LN': length, 'UR': ref_uri} for name, length in references]
+    }
+    header = pysam.AlignmentHeader.from_dict(header_dict)
+    ref_id = header.references.index(ref_name) # Get ref_id from the new header
 
     # Use 'wc' mode for CRAM output, provide reference path
     with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=str(ref_path)) as cramfile:
