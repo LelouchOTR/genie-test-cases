@@ -1795,9 +1795,8 @@ def generate_sam_40(output_dir: Path, **kwargs):
 def generate_sam_41(output_dir: Path, **kwargs):
     """SAM_41: (cram input) - Generate CRAM"""
     file_path = output_dir / "alignment.cram" # Output CRAM
-    # Use original reference path
-    utils.ensure_reference_exists("simple_ref.fa") # Ensure original exists
-    ref_path = utils.REFERENCE_FASTA_PATH # Use original path
+    # Copy reference to output dir and use that path for CRAM generation
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name="simple_ref.fa")
     ref_name = "ref1"
     read_len = 12
 
