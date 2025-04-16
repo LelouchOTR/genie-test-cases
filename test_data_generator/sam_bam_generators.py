@@ -1809,6 +1809,20 @@ def generate_sam_41(output_dir: Path, **kwargs):
     print(f"{Fore.YELLOW}DEBUG SAM_41: Using reference_filename (URI): {ref_path.absolute().as_uri()}{Fore.RESET}")
     # --- END DEBUGGING ---
 
+    # --- MORE DEBUGGING: Explicitly test fetching ref2 ---
+    try:
+        print(f"{Fore.CYAN}DEBUG SAM_41: Attempting to open {ref_path.absolute()} with pysam.FastaFile...{Fore.RESET}")
+        with pysam.FastaFile(str(ref_path.absolute())) as test_fasta:
+            print(f"{Fore.CYAN}DEBUG SAM_41: FastaFile opened. References found: {test_fasta.references}{Fore.RESET}")
+            print(f"{Fore.CYAN}DEBUG SAM_41: Attempting to fetch 'ref2'...{Fore.RESET}")
+            ref2_seq = test_fasta.fetch('ref2')
+            print(f"{Fore.GREEN}DEBUG SAM_41: Successfully fetched 'ref2'. Length: {len(ref2_seq)}{Fore.RESET}")
+    except Exception as e:
+        print(f"{Fore.RED}DEBUG SAM_41: ERROR explicitly fetching 'ref2' with pysam.FastaFile: {e}{Fore.RESET}")
+        # Optionally re-raise if you want the script to stop here on failure
+        # raise
+    # --- END MORE DEBUGGING ---
+
     # --- Modify Code: Consolidate FastaFile access ---
     references_with_checksums = []
     seq_r1 = None
