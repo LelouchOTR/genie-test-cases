@@ -3,7 +3,6 @@ import pysam
 import hashlib
 from . import utils # Relative import
 from tqdm import tqdm
-from colorama import Fore
 
 # Helper function for setting common paired flags
 def set_paired_flags(segment: pysam.AlignedSegment, is_read1: bool) -> None:
@@ -1800,38 +1799,13 @@ def generate_sam_41(output_dir: Path, **kwargs):
     ref_name = "ref1"
     read_len = 12
 
-    # --- Regenerate FAI index for the copied FASTA ---
+    # Regenerate FAI index for the copied FASTA to ensure compatibility
     try:
-        print(f"{Fore.MAGENTA}DEBUG SAM_41: Regenerating FASTA index for: {ref_path.absolute()}...{Fore.RESET}")
+        tqdm.write(f"INFO SAM_41: Regenerating FASTA index for copied reference: {ref_path.name}")
         pysam.faidx(str(ref_path.absolute()))
-        print(f"{Fore.MAGENTA}DEBUG SAM_41: FASTA index regenerated successfully.{Fore.RESET}")
     except Exception as e:
-        print(f"{Fore.RED}DEBUG SAM_41: ERROR regenerating FASTA index: {e}{Fore.RESET}")
-        raise # Stop if index generation fails
-    # --- End FAI regeneration ---
-
-    # --- DEBUGGING ---
-    print(f"{Fore.YELLOW}DEBUG SAM_41: CRAM file path: {file_path.absolute()}{Fore.RESET}")
-    print(f"{Fore.YELLOW}DEBUG SAM_41: Reference FASTA path (used for header): {ref_path.absolute()}{Fore.RESET}")
-    ref_index_path = ref_path.with_suffix(ref_path.suffix + '.fai')
-    print(f"{Fore.YELLOW}DEBUG SAM_41: Expected Reference FAI path: {ref_index_path.absolute()}{Fore.RESET}")
-    print(f"{Fore.YELLOW}DEBUG SAM_41: Does FAI file exist at expected path? {ref_index_path.exists()}{Fore.RESET}")
-    print(f"{Fore.YELLOW}DEBUG SAM_41: Using reference_filename (URI): {ref_path.absolute().as_uri()}{Fore.RESET}")
-    # --- END DEBUGGING ---
-
-    # --- MORE DEBUGGING: Explicitly test fetching ref2 ---
-    try:
-        print(f"{Fore.CYAN}DEBUG SAM_41: Attempting to open {ref_path.absolute()} with pysam.FastaFile...{Fore.RESET}")
-        with pysam.FastaFile(str(ref_path.absolute())) as test_fasta:
-            print(f"{Fore.CYAN}DEBUG SAM_41: FastaFile opened. References found: {test_fasta.references}{Fore.RESET}")
-            print(f"{Fore.CYAN}DEBUG SAM_41: Attempting to fetch 'ref2'...{Fore.RESET}")
-            ref2_seq = test_fasta.fetch('ref2')
-            print(f"{Fore.GREEN}DEBUG SAM_41: Successfully fetched 'ref2'. Length: {len(ref2_seq)}{Fore.RESET}")
-    except Exception as e:
-        print(f"{Fore.RED}DEBUG SAM_41: ERROR explicitly fetching 'ref2' with pysam.FastaFile: {e}{Fore.RESET}")
-        # Optionally re-raise if you want the script to stop here on failure
-        # raise
-    # --- END MORE DEBUGGING ---
+        tqdm.write(f"ERROR SAM_41: Failed to regenerate FASTA index for {ref_path.name}: {e}")
+        raise
 
     # --- Modify Code: Consolidate FastaFile access ---
     references_with_checksums = []
