@@ -1795,7 +1795,9 @@ def generate_sam_40(output_dir: Path, **kwargs):
 def generate_sam_41(output_dir: Path, **kwargs):
     """SAM_41: (cram input) - Generate CRAM"""
     file_path = output_dir / "alignment.cram" # Output CRAM
-    ref_path = utils.copy_reference_to_output(output_dir) # Reference is MANDATORY for CRAM
+    # Use original reference path
+    utils.ensure_reference_exists("simple_ref.fa") # Ensure original exists
+    ref_path = utils.REFERENCE_FASTA_PATH # Use original path
     ref_name = "ref1"
     read_len = 12
 
@@ -1848,11 +1850,6 @@ def generate_sam_41(output_dir: Path, **kwargs):
         r1.mapping_quality = 60
         r1.cigarstring = f"{read_len}M"
         r1.flag = 0
-        # --- Add Debug Code ---
-        print(f"--- DEBUG SAM_41 (Before write r1) ---")
-        print(f"Ref path exists: {ref_path.exists()}")
-        print(f"Ref FAI path exists: {ref_fai_path.exists()}")
-        # --- End Debug Code ---
         cramfile.write(r1)
 
         r2 = pysam.AlignedSegment()
@@ -1864,11 +1861,6 @@ def generate_sam_41(output_dir: Path, **kwargs):
         r2.mapping_quality = 60
         r2.cigarstring = f"{read_len}M"
         r2.flag = 0
-        # --- Add Debug Code ---
-        print(f"--- DEBUG SAM_41 (Before write r2) ---")
-        print(f"Ref path exists: {ref_path.exists()}")
-        print(f"Ref FAI path exists: {ref_fai_path.exists()}")
-        # --- End Debug Code ---
         cramfile.write(r2)
 
 
