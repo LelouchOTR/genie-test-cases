@@ -19,7 +19,7 @@ def generate_fastq_01(output_dir: Path, **kwargs):
 
 def generate_fastq_02(output_dir: Path, **kwargs):
     """FASTQ_02: Single End – variable read length"""
-    file_path = output_dir / "reads.fq"
+    file_path = output_dir / "reads.fastq"
     content = ""
     content += utils.create_fastq_entry("read1_var", "ACGTACGTACGT", "!!!!!!!!!!!!") # len 12
     content += utils.create_fastq_entry("read2_var", "CCCCCCCC", "########")       # len 8
@@ -48,8 +48,8 @@ def generate_fastq_03(output_dir: Path, **kwargs):
 
 def generate_fastq_04(output_dir: Path, **kwargs):
     """FASTQ_04: Paired End - mates different length"""
-    file1_path = output_dir / "reads_1.fq"
-    file2_path = output_dir / "reads_2.fq"
+    file1_path = output_dir / "reads_1.fastq"
+    file2_path = output_dir / "reads_2.fastq"
     content1 = ""
     content2 = ""
     len1 = 12
@@ -91,8 +91,8 @@ def generate_fastq_06(output_dir: Path, **kwargs):
 
 def generate_fastq_07(output_dir: Path, **kwargs):
     """FASTQ_07: Paired End - different read names"""
-    file1_path = output_dir / "reads_1.fq"
-    file2_path = output_dir / "reads_2.fq"
+    file1_path = output_dir / "reads_1.fastq"
+    file2_path = output_dir / "reads_2.fastq"
     content1 = ""
     content2 = ""
     read_len = 10
@@ -111,7 +111,7 @@ def generate_fastq_07(output_dir: Path, **kwargs):
 
 def generate_fastq_08(output_dir: Path, **kwargs):
     """FASTQ_08: Alphabet test Quality score range"""
-    file_path = output_dir / "reads.fq"
+    file_path = output_dir / "reads.fastq"
     # Phred+33 ASCII range: ! (33) to ~ (126)
     qual_chars = "".join([chr(i) for i in range(33, 127)])
     # Sequence needs to match length
@@ -122,7 +122,7 @@ def generate_fastq_08(output_dir: Path, **kwargs):
 
 def generate_fastq_09(output_dir: Path, **kwargs):
     """FASTQ_09: Alphabet test nucleotide alphabet ACTG"""
-    file_path = output_dir / "reads.fq"
+    file_path = output_dir / "reads.fastq"
     # Strictly ACGT, repeating
     sequence = "ACGT" * 10
     quality = "!" * len(sequence)
@@ -132,7 +132,7 @@ def generate_fastq_09(output_dir: Path, **kwargs):
 
 def generate_fastq_10(output_dir: Path, **kwargs):
     """FASTQ_10: Alphabet test nucleotide alphabet IUPAC"""
-    file_path = output_dir / "reads.fq"
+    file_path = output_dir / "reads.fastq"
     # Standard IUPAC ambiguity codes + N
     sequence = "ACGTRYSWKMBDHVN" * 2
     quality = "!" * len(sequence)
@@ -142,7 +142,7 @@ def generate_fastq_10(output_dir: Path, **kwargs):
 
 def generate_fastq_11(output_dir: Path, **kwargs):
     """FASTQ_11: Read name alphabet test"""
-    file_path = output_dir / "reads.fq"
+    file_path = output_dir / "reads.fastq"
     # Allowed: Any # tqdm.writeable ASCII except whitespace chars like space, tab
     # Let's try a good range, excluding space (chr 32)
     read_name = "".join([chr(i) for i in range(33, 127)])
@@ -154,8 +154,8 @@ def generate_fastq_11(output_dir: Path, **kwargs):
 
 def generate_fastq_12(output_dir: Path, **kwargs):
     """FASTQ_12: Paired End - unequal file lengths"""
-    file1_path = output_dir / "reads_1.fq"
-    file2_path = output_dir / "reads_2.fq"
+    file1_path = output_dir / "reads_1.fastq"
+    file2_path = output_dir / "reads_2.fastq"
     content1 = ""
     content2 = ""
     read_len = 10
