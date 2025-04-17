@@ -22,7 +22,7 @@ def _generate_large_reference_file(ref_path: Path) -> None:
     """
     # Create repetitive sequence to make a large file
     repeat_unit = "ACGT" * 250  # 1000 bp repeat unit
-    num_repeats = 1000          # 1000 * 1000 = 1,000,000 bp
+    num_repeats = 2000          # 2000 * 1000 = 2,000,000 bp (~2 Mbp)
     description = ">large_ref\n" # Simplified description
 
     try:
