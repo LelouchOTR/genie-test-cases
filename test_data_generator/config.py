@@ -244,9 +244,9 @@ TEST_CASES = [
         "format": "sam",
         "output_subdir": "SAM_24",
         "generator_func": "sam_bam_generators.generate_sam_24",
-        "params": {},
+        "params": {"special_reference": "large_ref.fa"},
         "description": "Reads with mates mapped far apart",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "large_ref.fa"]
     },
     {
         "id": "SAM_25",
@@ -354,9 +354,9 @@ TEST_CASES = [
         "format": "sam",
         "output_subdir": "SAM_35",
         "generator_func": "sam_bam_generators.generate_sam_35",
-        "params": {},
+        "params": {"special_reference": "large_ref.fa"},
         "description": "Pairs with reverse flags and large separation",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "large_ref.fa"]
     },
     {
         "id": "SAM_36",

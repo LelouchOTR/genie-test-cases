@@ -1164,22 +1164,35 @@ def generate_sam_23(output_dir: Path, **kwargs):
 
 def generate_sam_24(output_dir: Path, **kwargs):
     """SAM_24: next read … flags – long distance"""
-    # Assumption: Show a mapped read where mate flags indicate mate is mapped far away.
-    # Similar to SAM_09, but focus is on the flags of one read.
+    """SAM_24: next read … flags – long distance"""
+    # Assumption: Show a mapped read where mate flags indicate mate is mapped far away (>1Mb).
     file_path = output_dir / "alignment.sam"
-    ref_path = utils.copy_reference_to_output(output_dir)
-    header = utils.get_default_sam_header()
-    ref_name = "ref1"
+    utils.ensure_reference_exists("large_ref.fa")
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        references = fasta.references
+        lengths = fasta.lengths
+        ref_name = references[0] # Assume first ref is the large one
+    header = pysam.AlignmentHeader.from_references(references, lengths)
     ref_id = header.references.index(ref_name)
+    ref_length = header.lengths[ref_id]
+
+    r1_len = 100 # Use a reasonable read length
+    r2_len = 100
     r1_start = 5
-    r1_len = 20
-    r2_start = 130 # Far away on short ref
-    r2_len = 20
-    tlen = (r2_start + r2_len - 1) - r1_start + 1 # Large TLEN
+    # Ensure r2_start is far away, e.g., > 1Mb from r1_start
+    min_separation = 1_100_000 # Slightly over 1Mb
+    r2_start = max(r1_start + min_separation, ref_length - r2_len - 5)
+    if r2_start >= ref_length - r2_len: # Adjust if ref too short
+         r2_start = ref_length - r2_len - 5
+         tqdm.write(f"WARN SAM_24: Large ref not long enough for >1Mb separation, using {r2_start=}")
+
+    # Calculate TLEN based on the outermost coordinates
+    tlen = (r2_start + r2_len - 1) - r1_start + 1 # Recalculate TLEN
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         # R1 of a long-distance pair
-        r1 = pysam.AlignedSegment()
+        r1 = pysam.AlignedSegment(header) # Use the large ref header
         r1.query_name = "mapped_mate_far"
         r1.query_sequence = "N" * r1_len
         r1.query_qualities = pysam.qualitystring_to_array("!" * r1_len)
@@ -1553,21 +1566,32 @@ def generate_sam_34(output_dir: Path, **kwargs):
 
 def generate_sam_35(output_dir: Path, **kwargs):
     """SAM_35: Reverse Complement (different + same) – long distance"""
-    # Assumption: Similar to SAM_34 but with large separation / TLEN
-    # Combine SAM_09 logic with SAM_34 logic
+    """SAM_35: Reverse Complement (different + same) – long distance"""
+    # Assumption: Similar to SAM_34 but with large separation (>1Mb)
     file_path = output_dir / "alignment.sam"
-    ref_path = utils.copy_reference_to_output(output_dir)
-    header = utils.get_default_sam_header()
-    ref_name = "ref1"
+    utils.ensure_reference_exists("large_ref.fa")
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        references = fasta.references
+        lengths = fasta.lengths
+        ref_name = references[0] # Assume first ref is the large one
+    header = pysam.AlignmentHeader.from_references(references, lengths)
     ref_id = header.references.index(ref_name)
-    read_len = 15
+    ref_length = header.lengths[ref_id]
+
+    read_len = 100 # Use a reasonable read length
     r1_start = 5
-    r2_start = 140 # Far apart
+    # Ensure r2_start is far away, e.g., > 1Mb from r1_start
+    min_separation = 1_100_000 # Slightly over 1Mb
+    r2_start = max(r1_start + min_separation, ref_length - read_len - 5)
+    if r2_start >= ref_length - read_len: # Adjust if ref too short
+         r2_start = ref_length - read_len - 5
+         tqdm.write(f"WARN SAM_35: Large ref not long enough for >1Mb separation, using {r2_start=}")
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         # Pair 1: FR, long distance
-        tlen = (r2_start + read_len - 1) - r1_start + 1
-        r1 = pysam.AlignedSegment()
+        tlen = (r2_start + read_len - 1) - r1_start + 1 # Recalculate TLEN
+        r1 = pysam.AlignedSegment(header) # Use the large ref header
         r1.query_name = "revcomp_long_FR"
         r1.query_sequence = "A" * read_len
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
@@ -1576,10 +1600,10 @@ def generate_sam_35(output_dir: Path, **kwargs):
         r1.mapping_quality = 60; r1.cigarstring = f"{read_len}M"
         set_mate_info(r1, header, ref_name, r2_start, False, True) # Mate is Rev
         r1.template_length = tlen
-        # Flag: Paired, Mate Rev, R1. Maybe not 'proper' (0x2) due to distance.
+        # Flag: Paired, Mate Rev, R1. Not 'proper' (0x2) due to distance.
         r1.flag = 97 # 0x1 + 0x20 + 0x40
         samfile.write(r1)
-        r2 = pysam.AlignedSegment()
+        r2 = pysam.AlignedSegment(header) # Use the large ref header
         r2.query_name = "revcomp_long_FR"
         r2.query_sequence = "T" * read_len
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
@@ -1588,9 +1612,10 @@ def generate_sam_35(output_dir: Path, **kwargs):
         r2.mapping_quality = 60; r2.cigarstring = f"{read_len}M"
         set_mate_info(r2, header, ref_name, r1_start, False, False) # Mate is Fwd
         r2.template_length = -tlen
-        # Flag: Paired, Read Rev, R2. Maybe not 'proper'.
+        # Flag: Paired, Read Rev, R2. Not 'proper' (0x2) due to distance.
         r2.flag = 145 # 0x1 + 0x10 + 0x80
         samfile.write(r2)
+        # (Can add other revcomp pairs like RF, FF if needed for long distance test)
 
 
 def generate_sam_36(output_dir: Path, **kwargs):
