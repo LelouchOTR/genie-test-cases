@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 def generate_fastq_01(output_dir: Path, **kwargs):
     """FASTQ_01: Single End – constant read length"""
-    file_path = output_dir / "reads.fq"
+    file_path = output_dir / "reads.fastq"
     content = ""
     content += utils.create_fastq_entry("read1_const", "ACGTACGTACGT", "!!!!!!!!!!!!") # len 12
     content += utils.create_fastq_entry("read2_const", "CCCCCCCCCCCC", "############") # len 12
@@ -29,8 +29,8 @@ def generate_fastq_02(output_dir: Path, **kwargs):
 
 def generate_fastq_03(output_dir: Path, **kwargs):
     """FASTQ_03: Paired End - both mates same length"""
-    file1_path = output_dir / "reads_1.fq"
-    file2_path = output_dir / "reads_2.fq"
+    file1_path = output_dir / "reads_1.fastq"
+    file2_path = output_dir / "reads_2.fastq"
     content1 = ""
     content2 = ""
     read_len = 15
@@ -69,7 +69,7 @@ def generate_fastq_04(output_dir: Path, **kwargs):
 def generate_fastq_05(output_dir: Path, **kwargs):
     """FASTQ_05: (fastq.gz input)"""
     # Generate the content first
-    file_path_fq = output_dir / "reads.fq.temp"
+    file_path_fq = output_dir / "reads.fastq.temp"
     content = ""
     content += utils.create_fastq_entry("read1_gz", "ACGTACGTACGT", "!!!!!!!!!!!!")
     content += utils.create_fastq_entry("read2_gz", "CCCCCCCCCCCC", "############")
@@ -78,7 +78,7 @@ def generate_fastq_05(output_dir: Path, **kwargs):
         f.write(content)
 
     # Gzip the file
-    file_path_gz = output_dir / "reads.fq.gz"
+    file_path_gz = output_dir / "reads.fastq.gz"
     with open(file_path_fq, 'rb') as f_in, gzip.open(file_path_gz, 'wb') as f_out:
         shutil.copyfileobj(f_in, f_out)
     file_path_fq.unlink() # Remove temporary file

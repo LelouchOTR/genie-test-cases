@@ -438,7 +438,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_01",
         "params": {},
         "description": "Single-end reads with consistent length",
-        "output_files": ["reads.fq"]
+        "output_files": ["reads.fastq"]
     },
     {
         "id": "FASTQ_02",
@@ -458,7 +458,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_03",
         "params": {},
         "description": "Paired-end reads where both mates have same length",
-        "output_files": ["reads_1.fq", "reads_2.fq"]
+        "output_files": ["reads_1.fastq", "reads_2.fastq"]
     },
     {
         "id": "FASTQ_04",
@@ -478,7 +478,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_05",
         "params": {},
         "description": "FASTQ input compressed with gzip",
-        "output_files": ["reads.fq.gz"]
+        "output_files": ["reads.fastq.gz"]
     },
     {
         "id": "FASTQ_06",
