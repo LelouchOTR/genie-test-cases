@@ -1,10 +1,12 @@
-# environment.yml - Minimal Conda environment for genie_test_cases in WSL
-name: genie-test-wsl # Choose a name for your environment
+# environment.yml - Conda environment for genie_test_cases
+name: genie-test
 channels:
-  - conda-forge   # Often needed for dependencies
-  - bioconda      # Primary channel for pysam on Linux/WSL
+  - conda-forge
+  - bioconda
   - defaults
 dependencies:
-  - python=3.9    # Or your preferred Python 3 version (e.g., 3.10, 3.11)
-  - pysam         # The core requirement
-  - pip           # Good practice to include pip
+  - python=3.12       # Updated to Python 3.12
+  - pysam=0.23.0        # Pinned to specific version
+  - tqdm>=4.66.0      # Added with minimum version
+  - colorama>=0.4.6   # Added for terminal formatting
+  - pip               # Maintained for any pip-only needs

@@ -1,11 +1,17 @@
 from pathlib import Path
 import pysam
+import hashlib
 from . import utils # Relative import
 from tqdm import tqdm
-from colorama import Fore
 
 # Helper function for setting common paired flags
-def set_paired_flags(segment: pysam.AlignedSegment, is_read1: bool):
+def set_paired_flags(segment: pysam.AlignedSegment, is_read1: bool) -> None:
+    """Sets the paired-end flags on a pysam AlignedSegment.
+    
+    Args:
+        segment: The segment to modify
+        is_read1: Whether this is read1 (True) or read2 (False)
+    """
     segment.is_paired = True
     segment.is_read1 = is_read1
     segment.is_read2 = not is_read1
@@ -13,15 +19,29 @@ def set_paired_flags(segment: pysam.AlignedSegment, is_read1: bool):
 # Helper function for setting mate info
 def set_mate_info(segment: pysam.AlignedSegment, header: pysam.AlignmentHeader,
                   mate_ref_name: str | None, mate_start: int,
-                  mate_is_unmapped: bool, mate_is_reverse: bool):
+                  mate_is_unmapped: bool, mate_is_reverse: bool) -> None:
+    """Sets mate information flags and positions on a pysam AlignedSegment.
+    
+    Args:
+        segment: The segment to modify
+        header: The SAM header for reference name resolution
+        mate_ref_name: Name of mate's reference sequence (None if unmapped)
+        mate_start: Mate's start position (-1 if unmapped)
+        mate_is_unmapped: Whether mate is unmapped
+        mate_is_reverse: Whether mate is on reverse strand
+    """
     segment.mate_is_unmapped = mate_is_unmapped
     segment.mate_is_reverse = mate_is_reverse
+    
     if mate_ref_name is not None and not mate_is_unmapped:
-        segment.next_reference_id = header.references.index(mate_ref_name)
+        try:
+            ref_id = header.references.index(mate_ref_name)
+        except ValueError:
+            raise
+        
+        segment.next_reference_id = ref_id
         segment.next_reference_start = mate_start
     else:
-        # If mate is unmapped, standard practice is to set mate position info
-        # to the same as the read itself (or 0 if this read is also unmapped)
         segment.next_reference_id = segment.reference_id if segment.reference_id is not None else -1
         segment.next_reference_start = segment.reference_start if segment.reference_start is not None else -1
 
@@ -43,7 +63,6 @@ def generate_sam_01(output_dir: Path, **kwargs):
         a.is_paired = False
         samfile.write(a)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_02(output_dir: Path, **kwargs):
     """SAM_02: Unmapped pair"""
@@ -99,12 +118,11 @@ def generate_sam_02(output_dir: Path, **kwargs):
         r2.flag = flag_r2
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_03(output_dir: Path, **kwargs):
     """SAM_03: Half-mapped read pair"""
     file_path = output_dir / "alignment.sam"
-    ref_path = utils.copy_reference_to_output(output_dir)
+    ref_path = utils.copy_reference_to_output(output_dir)  # Use default simple_ref.fa
     header = utils.get_default_sam_header()
     ref_name = "ref1"
     ref_id = header.references.index(ref_name)
@@ -123,20 +141,19 @@ def generate_sam_03(output_dir: Path, **kwargs):
         r1.mapping_quality = 60
         r1.cigarstring = f"{read_len}M"
         # Mate is unmapped, R2, same ref, pos=0 (convention)
-        set_mate_info(r1, header, mate_ref_name=ref_name, mate_start=-1, mate_is_unmapped=True, mate_is_reverse=False)
+        set_mate_info(r1, header, mate_ref_name="*", mate_start=0, mate_is_unmapped=True, mate_is_reverse=False)
         # Flags: 0x1 (paired) + 0x8 (mate unmapped) + 0x40 (R1) = 73
         r1.flag = 73
         samfile.write(r1)
 
         r2 = pysam.AlignedSegment()
         r2.query_name = "half_mapped_1"
-        r2.query_sequence = "T" * read_len
+        r2.query_sequence = utils.reverse_complement(r1.query_sequence)  # Custom reverse complement
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         set_paired_flags(r2, is_read1=False)
         r2.is_unmapped = True
         # Mate is mapped, R1, same ref, pos=map_pos
-        set_mate_info(r2, header, mate_ref_name=ref_name, mate_start=map_pos, mate_is_unmapped=False,
-mate_is_reverse=False)
+        set_mate_info(r2, header, mate_ref_name="*", mate_start=0, mate_is_unmapped=True, mate_is_reverse=False)
         # Flags: 0x1 (paired) + 0x4 (read unmapped) + 0x80 (R2) = 133
         r2.flag = 133
         samfile.write(r2)
@@ -197,8 +214,6 @@ mate_is_reverse=False)
         r2.flag = 133 # Same flags as pair 1 R2
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_04(output_dir: Path, **kwargs):
     """SAM_04: Mapped read single end"""
@@ -250,8 +265,6 @@ def generate_sam_04(output_dir: Path, **kwargs):
         r3.flag = 0
         samfile.write(r3)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_05(output_dir: Path, **kwargs):
     """SAM_05: Mapped read pair – same position + TLEN"""
@@ -300,8 +313,6 @@ mate_is_reverse=False)
         r2.flag = 131
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_06(output_dir: Path, **kwargs):
     """SAM_06: Mapped read pair – enclosed + TLEN"""
@@ -330,8 +341,7 @@ def generate_sam_06(output_dir: Path, **kwargs):
         r1.mapping_quality = 60
         r1.cigarstring = f"{r1_len}M"
         # Mate info: R2, mapped, same ref, r2_start, IS reversed
-        set_mate_info(r1, header, mate_ref_name=ref_name, mate_start=r2_start, mate_is_unmapped=False,
-mate_is_reverse=True)
+        set_mate_info(r1, header, ref_name, r2_start, False, True)
         r1.template_length = tlen
         # Flags: 0x1 (paired) + 0x2 (proper pair) + 0x20 (mate reverse) + 0x40 (R1) = 99
         r1.flag = 99
@@ -348,15 +358,12 @@ mate_is_reverse=True)
         r2.cigarstring = f"{r2_len}M"
         r2.is_reverse = True # R2 is reverse
         # Mate info: R1, mapped, same ref, r1_start, NOT reversed
-        set_mate_info(r2, header, mate_ref_name=ref_name, mate_start=r1_start, mate_is_unmapped=False,
-mate_is_reverse=False)
+        set_mate_info(r2, header, ref_name, r1_start, False, False)
         r2.template_length = -tlen
         # Flags: 0x1 (paired) + 0x2 (proper pair) + 0x10 (read reverse) + 0x80 (R2) = 147
         r2.flag = 147
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_07(output_dir: Path, **kwargs):
     """SAM_07: Mapped read pair – overlapping + TLEN"""
@@ -370,8 +377,7 @@ def generate_sam_07(output_dir: Path, **kwargs):
     r2_start = 70
     r2_len = 40 # R2: 70 - 110 (overlaps R1)
 
-    # Assume FR orientation: R1 forward, R2 reverse
-    # TLEN = pos(R2_rightmost) - pos(R1_leftmost) + 1 = (r2_start + r2_len - 1) - r1_start + 1 = 109 - 50 + 1 = 60
+    # Calculate TLEN based on actual positions
     tlen = (r2_start + r2_len - 1) - r1_start + 1
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
@@ -410,8 +416,6 @@ mate_is_reverse=False)
         r2.flag = 147
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_08(output_dir: Path, **kwargs):
     """SAM_08: Mapped read pair – no overlapping + TLEN"""
@@ -461,64 +465,57 @@ mate_is_reverse=False)
         r2.flag = 147 # Paired, Proper, Read Reverse, R2
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_09(output_dir: Path, **kwargs):
-    """SAM_09: Mapped read pair – long distance + TLEN"""
-    # Note: Our default reference is short. We simulate long distance by placing
-    # reads far apart on the *same* short reference. Real long distance might
-    # require a larger reference file.
+    """SAM_09: Mapped read pair - long distance + TLEN (>1M bases)"""
     file_path = output_dir / "alignment.sam"
-    ref_path = utils.copy_reference_to_output(output_dir)
-    header = utils.get_default_sam_header()
-    ref_name = "ref1"
+    utils.ensure_reference_exists("large_ref.fa")
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
+    
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        references = fasta.references
+        lengths = fasta.lengths
+        ref_name = references[0]
+    
+    header = pysam.AlignmentHeader.from_references(references, lengths)
     ref_id = header.references.index(ref_name)
+    ref_length = header.lengths[ref_id]
+    
     r1_start = 5
-    r1_len = 20 # R1: 5 - 25
-    # Simulate large distance by putting R2 near the end of ref1 (length 160)
-    r2_start = 130
-    r2_len = 20 # R2: 130 - 150
-
-    # Assume FR orientation
-    # TLEN = pos(R2_rightmost) - pos(R1_leftmost) + 1 = (130 + 20 - 1) - 5 + 1 = 149 - 5 + 1 = 145
-    tlen = (r2_start + r2_len - 1) - r1_start + 1
+    r2_start = ref_length - 100
+    read_len = 100
+    tlen = (r2_start + read_len) - r1_start
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
-        r1 = pysam.AlignedSegment()
+        # Read 1 (leftmost)
+        r1 = pysam.AlignedSegment(header)
         r1.query_name = "long_dist_pair"
-        r1.query_sequence = "C" * r1_len
-        r1.query_qualities = pysam.qualitystring_to_array("!" * r1_len)
-        set_paired_flags(r1, is_read1=True)
+        r1.query_sequence = "A" * read_len
+        r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
         r1.reference_id = ref_id
         r1.reference_start = r1_start
         r1.mapping_quality = 60
-        r1.cigarstring = f"{r1_len}M"
-        set_mate_info(r1, header, mate_ref_name=ref_name, mate_start=r2_start, mate_is_unmapped=False,
-mate_is_reverse=True)
+        r1.cigarstring = f"{read_len}M"
+        set_mate_info(r1, header, ref_name, r2_start, False, True)
         r1.template_length = tlen
-        # Mark as proper pair? Depends on definition, let's assume yes for this test.
-        r1.flag = 99 # Paired, Proper, Mate Reverse, R1
-        samfile.write(r1)
+        r1.flag = 0x1 | 0x40 | 0x20
 
-        r2 = pysam.AlignedSegment()
+        # Read 2 (rightmost)
+        r2 = pysam.AlignedSegment(header)
         r2.query_name = "long_dist_pair"
-        r2.query_sequence = "G" * r2_len
-        r2.query_qualities = pysam.qualitystring_to_array("#" * r2_len)
-        set_paired_flags(r2, is_read1=False)
+        r2.query_sequence = "T" * read_len
+        r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         r2.reference_id = ref_id
         r2.reference_start = r2_start
         r2.mapping_quality = 60
-        r2.cigarstring = f"{r2_len}M"
+        r2.cigarstring = f"{read_len}M"
         r2.is_reverse = True
-        set_mate_info(r2, header, mate_ref_name=ref_name, mate_start=r1_start, mate_is_unmapped=False,
-mate_is_reverse=False)
+        set_mate_info(r2, header, ref_name, r1_start, False, False)
         r2.template_length = -tlen
-        r2.flag = 147 # Paired, Proper, Read Reverse, R2
-        samfile.write(r2)
+        r2.flag = 0x1 | 0x80 | 0x10
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
+        samfile.write(r1)
+        samfile.write(r2)
 
 def generate_sam_10(output_dir: Path, **kwargs):
     """SAM_10: Mapped read pair – different reference + TLEN"""
@@ -570,8 +567,6 @@ mate_is_reverse=False)
         r2.flag = 129
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_11(output_dir: Path, **kwargs):
     """SAM_11: Secondary alignment"""
@@ -624,8 +619,6 @@ def generate_sam_11(output_dir: Path, **kwargs):
         s2.flag = 256
         samfile.write(s2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_12(output_dir: Path, **kwargs):
     """SAM_12: Supplementary / chimeric alignment"""
@@ -675,8 +668,6 @@ def generate_sam_12(output_dir: Path, **kwargs):
         s1.flag = 2048
         samfile.write(s1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_13(output_dir: Path, **kwargs):
     """SAM_13: Base substitution (M, =, X)"""
@@ -729,9 +720,6 @@ def generate_sam_13(output_dir: Path, **kwargs):
         samfile.write(r2)
 
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-
 def generate_sam_14(output_dir: Path, **kwargs):
     """SAM_14: Base insertion"""
     file_path = output_dir / "alignment.sam"
@@ -758,8 +746,6 @@ def generate_sam_14(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_15(output_dir: Path, **kwargs):
     """SAM_15: Base deletion"""
@@ -787,8 +773,6 @@ def generate_sam_15(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_16(output_dir: Path, **kwargs):
     """SAM_16: Softclips"""
@@ -840,8 +824,6 @@ def generate_sam_16(output_dir: Path, **kwargs):
         r3.flag = 0
         samfile.write(r3)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_17(output_dir: Path, **kwargs):
     """SAM_17: Padding (P)"""
@@ -870,8 +852,6 @@ def generate_sam_17(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_18(output_dir: Path, **kwargs):
     """SAM_18: Hardclips"""
@@ -923,8 +903,6 @@ def generate_sam_18(output_dir: Path, **kwargs):
         r3.flag = 0
         samfile.write(r3)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_19(output_dir: Path, **kwargs):
     """SAM_19: PCR duplicate flag"""
@@ -994,8 +972,6 @@ mate_is_reverse=False)
         r3_2.flag = 0x1 + 0x2 + 0x10 + 0x80 # = 147
         samfile.write(r3_2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_20(output_dir: Path, **kwargs):
     """SAM_20: Paired end – different flags per mate"""
@@ -1081,8 +1057,6 @@ mate_is_reverse=False)
         r2.flag = 147
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_21(output_dir: Path, **kwargs):
     """SAM_21: next read … flags – unmapped"""
@@ -1098,11 +1072,12 @@ def generate_sam_21(output_dir: Path, **kwargs):
         r1.query_qualities = pysam.qualitystring_to_array("!" * 10)
         r1.flag = 0x1 + 0x4 + 0x8 # Paired, Unmapped, Mate Unmapped
         # Mate position often set to self if unmapped
-        set_mate_info(r1, header, mate_ref_name=None, mate_start=-1, mate_is_unmapped=True, mate_is_reverse=False)
+        r1.next_reference_id = -1  # *
+        r1.next_reference_start = 0
+        r1.mate_is_unmapped = True
+        r1.mate_is_reverse = False
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires unmapped read with mate flags set.")
 
 def generate_sam_22(output_dir: Path, **kwargs):
     """SAM_22: next read … flags – half mapped"""
@@ -1131,9 +1106,6 @@ def generate_sam_22(output_dir: Path, **kwargs):
         r1.flag = 9
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires mapped read with mate_unmapped flag set.")
 
 def generate_sam_23(output_dir: Path, **kwargs):
     """SAM_23: next read … flags – short distance"""
@@ -1189,29 +1161,38 @@ def generate_sam_23(output_dir: Path, **kwargs):
         r2.flag = 147
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires mapped read with mate flags indicating nearby mate.")
-
 
 def generate_sam_24(output_dir: Path, **kwargs):
     """SAM_24: next read … flags – long distance"""
-    # Assumption: Show a mapped read where mate flags indicate mate is mapped far away.
-    # Similar to SAM_09, but focus is on the flags of one read.
+    """SAM_24: next read … flags – long distance"""
+    # Assumption: Show a mapped read where mate flags indicate mate is mapped far away (>1Mb).
     file_path = output_dir / "alignment.sam"
-    ref_path = utils.copy_reference_to_output(output_dir)
-    header = utils.get_default_sam_header()
-    ref_name = "ref1"
+    utils.ensure_reference_exists("large_ref.fa")
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        references = fasta.references
+        lengths = fasta.lengths
+        ref_name = references[0] # Assume first ref is the large one
+    header = pysam.AlignmentHeader.from_references(references, lengths)
     ref_id = header.references.index(ref_name)
+    ref_length = header.lengths[ref_id]
+
+    r1_len = 100 # Use a reasonable read length
+    r2_len = 100
     r1_start = 5
-    r1_len = 20
-    r2_start = 130 # Far away on short ref
-    r2_len = 20
-    tlen = (r2_start + r2_len - 1) - r1_start + 1 # Large TLEN
+    # Ensure r2_start is far away, e.g., > 1Mb from r1_start
+    min_separation = 1_100_000 # Slightly over 1Mb
+    r2_start = max(r1_start + min_separation, ref_length - r2_len - 5)
+    if r2_start >= ref_length - r2_len: # Adjust if ref too short
+         r2_start = ref_length - r2_len - 5
+         tqdm.write(f"WARN SAM_24: Large ref not long enough for >1Mb separation, using {r2_start=}")
+
+    # Calculate TLEN based on the outermost coordinates
+    tlen = (r2_start + r2_len - 1) - r1_start + 1 # Recalculate TLEN
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         # R1 of a long-distance pair
-        r1 = pysam.AlignedSegment()
+        r1 = pysam.AlignedSegment(header) # Use the large ref header
         r1.query_name = "mapped_mate_far"
         r1.query_sequence = "N" * r1_len
         r1.query_qualities = pysam.qualitystring_to_array("!" * r1_len)
@@ -1232,9 +1213,6 @@ def generate_sam_24(output_dir: Path, **kwargs):
         samfile.write(r1)
         # (Mate R2 not strictly needed for this test)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires mapped read with mate flags indicating far away mate.")
 
 def generate_sam_25(output_dir: Path, **kwargs):
     """SAM_25: Short intron / splice (N)"""
@@ -1264,11 +1242,10 @@ def generate_sam_25(output_dir: Path, **kwargs):
         r1.mapping_quality = 60
         # CIGAR: Exon1 match, Intron skip, Exon2 match
         r1.cigarstring = f"{exon1_len}M{intron_len}N{exon2_len}M"
+        r1.set_tag('SA', f"ref1:{start_pos + exon1_len + intron_len}+{exon2_len}M,60,0;", 'Z')
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_26(output_dir: Path, **kwargs):
     """SAM_26: Long intron / splice (N)"""
@@ -1298,11 +1275,10 @@ def generate_sam_26(output_dir: Path, **kwargs):
         r1.reference_start = start_pos
         r1.mapping_quality = 60
         r1.cigarstring = f"{exon1_len}M{intron_len}N{exon2_len}M"
+        r1.set_tag('SA', f"ref1,85,+,25M,60,0;", 'Z')
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_27(output_dir: Path, **kwargs):
     """SAM_27: Empty read (all bases deleted)"""
@@ -1325,10 +1301,9 @@ def generate_sam_27(output_dir: Path, **kwargs):
         r1.reference_id = header.references.index("ref1") # Nominal ref
         r1.reference_start = 10 # Nominal start
         r1.mapping_quality = 0
-        r1.cigarstring = f"{deletion_len}D" # All deleted CIGAR
+        r1.cigarstring = "*"  # CIGAR must be '*' for unmapped reads
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_28(output_dir: Path, **kwargs):
     """SAM_28: Empty read (all bases softclipped)"""
@@ -1342,14 +1317,13 @@ def generate_sam_28(output_dir: Path, **kwargs):
         r1.query_name = "empty_softclipped_read"
         r1.query_sequence = "N" * read_len # Sequence must be present
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len) # Qualities must be present
-        r1.flag = 4 # Unmapped
-        r1.reference_id = -1
-        r1.reference_start = -1
-        r1.mapping_quality = 0
-        r1.cigarstring = f"{read_len}S" # All softclipped
+        r1.reference_id = 0  # Must have valid reference for mapped read
+        r1.reference_start = 0
+        r1.mapping_quality = 60
+        r1.cigarstring = f"{read_len}S"
+        r1.flag = 0  # Clear unmapped flag (0x4)
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_29(output_dir: Path, **kwargs):
     """SAM_29: Empty read (all bases hardclipped)"""
@@ -1367,10 +1341,9 @@ def generate_sam_29(output_dir: Path, **kwargs):
         r1.reference_id = -1
         r1.reference_start = -1
         r1.mapping_quality = 0
-        r1.cigarstring = f"{hardclip_len}H" # All hardclipped
+        r1.cigarstring = "*"  # CIGAR must be '*' for unmapped reads
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_30(output_dir: Path, **kwargs):
     """SAM_30: Empty read (no nucleotides in read / * in sam)"""
@@ -1390,7 +1363,6 @@ def generate_sam_30(output_dir: Path, **kwargs):
         r1.cigarstring = "*" # CIGAR is also often '*' here
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
 
 def generate_sam_31(output_dir: Path, **kwargs):
     """SAM_31: Quality scores absent"""
@@ -1414,8 +1386,6 @@ def generate_sam_31(output_dir: Path, **kwargs):
         r1.flag = 0
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_32(output_dir: Path, **kwargs):
     """SAM_32: Optional tags"""
@@ -1452,8 +1422,6 @@ def generate_sam_32(output_dir: Path, **kwargs):
         r1.set_tag('ZZ', 'custom_tag_value', 'Z') # Custom tag
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_33(output_dir: Path, **kwargs):
     """SAM_33: Read groups"""
@@ -1511,8 +1479,6 @@ def generate_sam_33(output_dir: Path, **kwargs):
         r3.set_tag('RG', 'rg1', 'Z')
         samfile.write(r3)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_34(output_dir: Path, **kwargs):
     """SAM_34: Reverse Complement (different + same) – short distance"""
@@ -1597,27 +1563,35 @@ def generate_sam_34(output_dir: Path, **kwargs):
         r2.template_length = tlen; r2.flag = 129 # Paired, R2 (Not proper, Mate not Rev)
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires pairs with different is_reverse/mate_is_reverse flag combinations.")
 
 def generate_sam_35(output_dir: Path, **kwargs):
     """SAM_35: Reverse Complement (different + same) – long distance"""
-    # Assumption: Similar to SAM_34 but with large separation / TLEN
-    # Combine SAM_09 logic with SAM_34 logic
+    """SAM_35: Reverse Complement (different + same) – long distance"""
+    # Assumption: Similar to SAM_34 but with large separation (>1Mb)
     file_path = output_dir / "alignment.sam"
-    ref_path = utils.copy_reference_to_output(output_dir)
-    header = utils.get_default_sam_header()
-    ref_name = "ref1"
+    utils.ensure_reference_exists("large_ref.fa")
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        references = fasta.references
+        lengths = fasta.lengths
+        ref_name = references[0] # Assume first ref is the large one
+    header = pysam.AlignmentHeader.from_references(references, lengths)
     ref_id = header.references.index(ref_name)
-    read_len = 15
+    ref_length = header.lengths[ref_id]
+
+    read_len = 100 # Use a reasonable read length
     r1_start = 5
-    r2_start = 140 # Far apart
+    # Ensure r2_start is far away, e.g., > 1Mb from r1_start
+    min_separation = 1_100_000 # Slightly over 1Mb
+    r2_start = max(r1_start + min_separation, ref_length - read_len - 5)
+    if r2_start >= ref_length - read_len: # Adjust if ref too short
+         r2_start = ref_length - read_len - 5
+         tqdm.write(f"WARN SAM_35: Large ref not long enough for >1Mb separation, using {r2_start=}")
 
     with pysam.AlignmentFile(str(file_path), "w", header=header) as samfile:
         # Pair 1: FR, long distance
-        tlen = (r2_start + read_len - 1) - r1_start + 1
-        r1 = pysam.AlignedSegment()
+        tlen = (r2_start + read_len - 1) - r1_start + 1 # Recalculate TLEN
+        r1 = pysam.AlignedSegment(header) # Use the large ref header
         r1.query_name = "revcomp_long_FR"
         r1.query_sequence = "A" * read_len
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
@@ -1626,10 +1600,10 @@ def generate_sam_35(output_dir: Path, **kwargs):
         r1.mapping_quality = 60; r1.cigarstring = f"{read_len}M"
         set_mate_info(r1, header, ref_name, r2_start, False, True) # Mate is Rev
         r1.template_length = tlen
-        # Flag: Paired, Mate Rev, R1. Maybe not 'proper' (0x2) due to distance.
+        # Flag: Paired, Mate Rev, R1. Not 'proper' (0x2) due to distance.
         r1.flag = 97 # 0x1 + 0x20 + 0x40
         samfile.write(r1)
-        r2 = pysam.AlignedSegment()
+        r2 = pysam.AlignedSegment(header) # Use the large ref header
         r2.query_name = "revcomp_long_FR"
         r2.query_sequence = "T" * read_len
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
@@ -1638,13 +1612,10 @@ def generate_sam_35(output_dir: Path, **kwargs):
         r2.mapping_quality = 60; r2.cigarstring = f"{read_len}M"
         set_mate_info(r2, header, ref_name, r1_start, False, False) # Mate is Fwd
         r2.template_length = -tlen
-        # Flag: Paired, Read Rev, R2. Maybe not 'proper'.
+        # Flag: Paired, Read Rev, R2. Not 'proper' (0x2) due to distance.
         r2.flag = 145 # 0x1 + 0x10 + 0x80
         samfile.write(r2)
-
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires pairs with different reverse flags and large separation.")
+        # (Can add other revcomp pairs like RF, FF if needed for long distance test)
 
 
 def generate_sam_36(output_dir: Path, **kwargs):
@@ -1697,8 +1668,6 @@ def generate_sam_36(output_dir: Path, **kwargs):
         r2.flag = 0x1 + 0x4 + 0x8 + 0x80 # = 133
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires unmapped pairs with different reverse flags.")
 
 def generate_sam_37(output_dir: Path, **kwargs):
     """SAM_37: Reverse Complement (different + same) – half mapped"""
@@ -1765,9 +1734,6 @@ def generate_sam_37(output_dir: Path, **kwargs):
         r2.flag = 165
         samfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Assumed test requires half-mapped pairs with different reverse flags.")
 
 def generate_sam_38(output_dir: Path, **kwargs):
     """SAM_38: Circular reference"""
@@ -1803,9 +1769,6 @@ def generate_sam_38(output_dir: Path, **kwargs):
         r1.set_tag("ZC", "circular_test", "Z")
         samfile.write(r1)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
-    # tqdm.write(f"{Fore.GREEN}  Note: Read placed near end of linear reference. Tool under test must handle circularity.")
 
 def generate_sam_39(output_dir: Path, **kwargs):
     """SAM_39: (bam input) - Generate BAM"""
@@ -1845,34 +1808,61 @@ def generate_sam_39(output_dir: Path, **kwargs):
         r2.flag = 0
         bamfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_40(output_dir: Path, **kwargs):
-    """SAM_40: (bam output) - Generate SAM"""
+    """SAM_40: (bam output) - Generate SAM input for testing BAM output"""
     # This case expects the *tool under test* to produce bam output.
-    # So we just provide a standard sam file as input.
+    # So we provide a standard sam file as input. Reference also needed.
     # Reuse SAM_04 generator.
     generate_sam_04(output_dir, **kwargs)
-    # tqdm.write(f"{Fore.GREEN}  Note: Generated standard alignment.sam for testing bam output capability.")
 
 def generate_sam_41(output_dir: Path, **kwargs):
     """SAM_41: (cram input) - Generate CRAM"""
     file_path = output_dir / "alignment.cram" # Output CRAM
-    ref_path = utils.copy_reference_to_output(output_dir) # Reference is MANDATORY for CRAM
-    header = utils.get_default_sam_header()
+    # Copy reference to output dir and use that path for CRAM generation
+    ref_path = utils.copy_reference_to_output(output_dir, ref_name="simple_ref.fa")
     ref_name = "ref1"
-    ref_id = header.references.index(ref_name)
     read_len = 12
 
-    # Use 'wc' mode for CRAM output, provide reference path
+    # Regenerate FAI index for the copied FASTA to ensure compatibility
+    try:
+        tqdm.write(f"INFO SAM_41: Regenerating FASTA index for copied reference: {ref_path.name}")
+        pysam.faidx(str(ref_path.absolute()))
+    except Exception as e:
+        tqdm.write(f"ERROR SAM_41: Failed to regenerate FASTA index for {ref_path.name}: {e}")
+        raise
+
+    # --- Modify Code: Consolidate FastaFile access ---
+    references_with_checksums = []
+    seq_r1 = None
+    seq_r2 = None
+    # Open FASTA file once to get checksums and required sequences
+    with pysam.FastaFile(str(ref_path)) as fasta:
+        for name in fasta.references:
+            length = fasta.get_reference_length(name)
+            sequence = fasta.fetch(name).upper() # Fetch the sequence for checksum
+            checksum = hashlib.md5(sequence.encode()).hexdigest() # Calculate MD5
+            references_with_checksums.append((name, length, checksum)) # Store name, length, checksum
+
+        # Fetch sequences needed for reads within the same context
+        seq_r1 = fasta.fetch(ref_name, 0, read_len).upper()
+        seq_r2 = fasta.fetch(ref_name, 50, 50 + read_len).upper()
+
+    # Simplified header without UR and M5 tags
+    header_dict = {
+        'HD': {'VN': '1.6', 'SO': 'unsorted'},
+        'SQ': [{'SN': name, 'LN': length}
+               for name, length, checksum in references_with_checksums]
+    }
+    header = pysam.AlignmentHeader.from_dict(header_dict)
+    ref_id = header.references.index(ref_name)
+
+    # Use 'wc' mode for CRAM output with direct filesystem reference path
     with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=str(ref_path)) as cramfile:
         # Add a simple mapped read (similar to generate_sam_04)
         r1 = pysam.AlignedSegment()
         r1.query_name = "cram_input_read_1"
-        with pysam.FastaFile(str(ref_path)) as fasta:
-            seq = fasta.fetch(ref_name, 0, read_len).upper()
-            r1.query_sequence = seq
+        r1.query_sequence = seq_r1
         r1.query_qualities = pysam.qualitystring_to_array("!" * read_len)
         r1.reference_id = ref_id
         r1.reference_start = 0
@@ -1883,9 +1873,7 @@ def generate_sam_41(output_dir: Path, **kwargs):
 
         r2 = pysam.AlignedSegment()
         r2.query_name = "cram_input_read_2"
-        with pysam.FastaFile(str(ref_path)) as fasta:
-            seq = fasta.fetch(ref_name, 50, 50 + read_len).upper()
-        r2.query_sequence = seq
+        r2.query_sequence = seq_r2
         r2.query_qualities = pysam.qualitystring_to_array("#" * read_len)
         r2.reference_id = ref_id
         r2.reference_start = 50
@@ -1894,8 +1882,6 @@ def generate_sam_41(output_dir: Path, **kwargs):
         r2.flag = 0
         cramfile.write(r2)
 
-    # tqdm.write(f"{Fore.GREEN}   {file_path}")
-    # tqdm.write(f"{Fore.GREEN}  Copied reference: {ref_path}")
 
 def generate_sam_42(output_dir: Path, **kwargs):
     """SAM_42: (cram output) - Generate SAM"""
@@ -1903,4 +1889,3 @@ def generate_sam_42(output_dir: Path, **kwargs):
     # So we just provide a standard sam file as input. Reference also needed.
     # Reuse SAM_04 generator.
     generate_sam_04(output_dir, **kwargs)
-    # tqdm.write(f"{Fore.GREEN}  Note: Generated standard alignment.sam and copied reference for testing cram output capability.")

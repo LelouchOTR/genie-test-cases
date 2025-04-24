@@ -1,5 +1,6 @@
 import os
 import sys
+import importlib
 from pathlib import Path
 from tqdm import tqdm
 from colorama import Fore, Back, Style, init
@@ -34,9 +35,14 @@ def main():
                 func_path = case_config.get('generator_func')
                 if func_path:
                     module_name, func_name = func_path.rsplit('.', 1)
-                    module = __import__(f'test_data_generator.{module_name}',
-                                      fromlist=[func_name])
-                    generator_func = getattr(module, func_name)
+                    full_module_path = f'test_data_generator.{module_name}'
+                    try:
+                        module = importlib.import_module(full_module_path)
+                        generator_func = getattr(module, func_name)
+                    except (ImportError, AttributeError) as import_err:
+                        raise ImportError(
+                            f"Could not import {func_name} from {full_module_path}: {import_err}"
+                        ) from import_err
                     
                     # Run the generator
                     params = case_config.get('params', {})
@@ -64,7 +70,6 @@ def main():
     print(Style.RESET_ALL)
 
 if __name__ == "__main__":
-    # Ensure the script is run from the directory containing generate_tests.py
-    # or adjust paths accordingly if run from elsewhere.
-    os.chdir(Path(__file__).parent) # Change working dir to script dir for consistency
+    # Ensure script is run from the project root for correct path resolution
+    # (e.g., python -m test_data_generator.generate)
     main()

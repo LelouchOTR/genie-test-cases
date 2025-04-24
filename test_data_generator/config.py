@@ -1,6 +1,7 @@
+"""Configuration for test data generation."""
 from pathlib import Path
 
-# Base directory where test data will be generated
+# Base directory where test data will be generated (relative to project root)
 BASE_OUTPUT_DIR = Path("test_data")
 
 # Test case configurations
@@ -93,9 +94,9 @@ TEST_CASES = [
         "format": "sam",
         "output_subdir": "SAM_09",
         "generator_func": "sam_bam_generators.generate_sam_09",
-        "params": {},
+        "params": {"special_reference": "large_ref.fa"},
         "description": "Paired reads mapped far apart (>1M bases)",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "large_ref.fa"]
     },
     {
         "id": "SAM_10",
@@ -243,9 +244,9 @@ TEST_CASES = [
         "format": "sam",
         "output_subdir": "SAM_24",
         "generator_func": "sam_bam_generators.generate_sam_24",
-        "params": {},
+        "params": {"special_reference": "large_ref.fa"},
         "description": "Reads with mates mapped far apart",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "large_ref.fa"]
     },
     {
         "id": "SAM_25",
@@ -353,9 +354,9 @@ TEST_CASES = [
         "format": "sam",
         "output_subdir": "SAM_35",
         "generator_func": "sam_bam_generators.generate_sam_35",
-        "params": {},
+        "params": {"special_reference": "large_ref.fa"},
         "description": "Pairs with reverse flags and large separation",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "large_ref.fa"]
     },
     {
         "id": "SAM_36",
@@ -437,7 +438,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_01",
         "params": {},
         "description": "Single-end reads with consistent length",
-        "output_files": ["reads.fq"]
+        "output_files": ["reads.fastq"]
     },
     {
         "id": "FASTQ_02",
@@ -447,7 +448,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_02",
         "params": {},
         "description": "Single-end reads with varying lengths",
-        "output_files": ["reads.fq"]
+        "output_files": ["reads.fastq"]
     },
     {
         "id": "FASTQ_03",
@@ -457,7 +458,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_03",
         "params": {},
         "description": "Paired-end reads where both mates have same length",
-        "output_files": ["reads_1.fq", "reads_2.fq"]
+        "output_files": ["reads_1.fastq", "reads_2.fastq"]
     },
     {
         "id": "FASTQ_04",
@@ -467,7 +468,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_04",
         "params": {},
         "description": "Paired-end reads with different lengths per mate",
-        "output_files": ["reads_1.fq", "reads_2.fq"]
+        "output_files": ["reads_1.fastq", "reads_2.fastq"]
     },
     {
         "id": "FASTQ_05",
@@ -477,7 +478,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_05",
         "params": {},
         "description": "FASTQ input compressed with gzip",
-        "output_files": ["reads.fq.gz"]
+        "output_files": ["reads.fastq.gz"]
     },
     {
         "id": "FASTQ_06",
@@ -487,7 +488,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_06",
         "params": {},
         "description": "Test tool's ability to output gzipped FASTQ",
-        "output_files": ["reads.fq"]
+        "output_files": ["reads.fastq"]
     },
     {
         "id": "FASTQ_07",
@@ -497,7 +498,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_07",
         "params": {},
         "description": "Paired-end files with non-matching read names",
-        "output_files": ["reads_1.fq", "reads_2.fq"]
+        "output_files": ["reads_1.fastq", "reads_2.fastq"]
     },
     {
         "id": "FASTQ_08",
@@ -507,7 +508,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_08",
         "params": {},
         "description": "All valid Phred+33 quality scores",
-        "output_files": ["reads.fq"]
+        "output_files": ["reads.fastq"]
     },
     {
         "id": "FASTQ_09",
@@ -517,7 +518,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_09",
         "params": {},
         "description": "Reads containing only ACGT bases",
-        "output_files": ["reads.fq"]
+        "output_files": ["reads.fastq"]
     },
     {
         "id": "FASTQ_10",
@@ -527,7 +528,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_10",
         "params": {},
         "description": "Reads with IUPAC ambiguity characters",
-        "output_files": ["reads.fq"]
+        "output_files": ["reads.fastq"]
     },
     {
         "id": "FASTQ_11",
@@ -537,7 +538,7 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_11",
         "params": {},
         "description": "Read names with special characters",
-        "output_files": ["reads.fq"]
+        "output_files": ["reads.fastq"]
     },
     {
         "id": "FASTQ_12",
@@ -547,6 +548,6 @@ TEST_CASES = [
         "generator_func": "fastq_generators.generate_fastq_12",
         "params": {},
         "description": "Paired-end files with unequal numbers of reads",
-        "output_files": ["reads_1.fq", "reads_2.fq"]
+        "output_files": ["reads_1.fastq", "reads_2.fastq"]
     }
 ]
