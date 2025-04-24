@@ -137,7 +137,7 @@ TEST_CASES = [
         "params": {"special_reference": "large_ref.fa"},
         "description": "Single-end unmapped read with basic flags",
         "notes": "Verify handling of unmapped reads",
-        "output_files": ["alignment.sam"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "14",
@@ -157,7 +157,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_15",
         "params": {},
         "description": "Paired-end reads where one mate is mapped and one is unmapped",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "16",
@@ -217,7 +217,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_21",
         "params": {"special_reference": "large_ref.fa"},
         "description": "Paired reads mapped far apart (>1M bases)",
-        "output_files": ["alignment.sam", "large_ref.fa"]
+        "output_files": ["alignment.sam", "large_ref.fa", "large_ref.fa.fai"]
     },
     {
         "id": "22",

@@ -199,34 +199,40 @@ def reverse_complement(seq: str) -> str:
     return ''.join([complement.get(base, 'N') for base in reversed(seq)])
 
 def copy_reference_to_output(output_dir: Path, ref_name: str = "simple_ref.fa") -> Path:
-    """Copies the specified reference FASTA and its index files to the output directory.
-
-    Finds the reference FASTA in the 'reference/' source directory and copies it
-    to the target `output_dir`. Also copies associated index files
-    (e.g., .fai, .amb, .ann, .bwt, .pac, .sa) if they exist.
+    """Copies reference FASTA and generates .fai index in output directory.
+    
+    Copies the specified reference FASTA to the output directory and ensures
+    a .fai index exists. Also copies any BWA-style index files if present.
 
     Args:
-        output_dir: The destination directory for the reference file(s).
-        ref_name: The base name of the reference FASTA file to copy.
+        output_dir: Destination directory for the reference files
+        ref_name: Base name of reference FASTA file (default: simple_ref.fa)
 
     Returns:
-        The pathlib.Path object representing the copied reference FASTA file
-        in the output directory.
+        Path to copied reference FASTA in output directory
 
     Raises:
-        FileNotFoundError: If the source reference FASTA file does not exist.
+        FileNotFoundError: If source reference FASTA doesn't exist
+        RuntimeError: If .fai index generation fails
     """
     src_path = _THIS_DIR / "reference" / ref_name
     dest_path = output_dir / src_path.name
     
-    # Copy main FASTA file
+    # Copy FASTA file
     shutil.copy(str(src_path), str(dest_path))
     
-    # Also copy other index files (like BWA) if they exist, but NOT .fai
-    FASTA_INDEX_EXTENSIONS = ['.amb', '.ann', '.bwt', '.pac', '.sa'] # Removed '.fai'
-    for ext in FASTA_INDEX_EXTENSIONS:
-        index_src = src_path.with_suffix(src_path.suffix + ext)
-        if index_src.exists():
-            shutil.copy(str(index_src), str(dest_path.with_suffix(dest_path.suffix + ext)))
+    # Copy BWA-style indexes if present
+    bwa_exts = ['.amb', '.ann', '.bwt', '.pac', '.sa']
+    for ext in bwa_exts:
+        if (src_idx := src_path.with_suffix(src_path.suffix + ext)).exists():
+            shutil.copy(str(src_idx), str(dest_path.with_suffix(dest_path.suffix + ext)))
+    
+    # Generate .fai index if missing
+    dest_fai = dest_path.with_suffix(dest_path.suffix + '.fai')
+    if not dest_fai.exists():
+        try:
+            pysam.faidx(str(dest_path))
+        except Exception as e:
+            raise RuntimeError(f"Failed to generate .fai index for {dest_path}: {e}") from e
     
     return dest_path
