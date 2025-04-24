@@ -144,7 +144,7 @@ TEST_CASES = [
         "name": "Unmapped pair",
         "format": "sam",
         "output_subdir": "14",
-        "generator_func": "sam_bam_generators.generate_sam_02",
+        "generator_func": "sam_bam_generators.generate_sam_14",
         "params": {},
         "description": "Paired-end reads where both mates are unmapped",
         "output_files": ["alignment.sam"]
@@ -154,7 +154,7 @@ TEST_CASES = [
         "name": "Half-mapped read pair",
         "format": "sam",
         "output_subdir": "15",
-        "generator_func": "sam_bam_generators.generate_sam_03",
+        "generator_func": "sam_bam_generators.generate_sam_15",
         "params": {},
         "description": "Paired-end reads where one mate is mapped and one is unmapped",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -164,7 +164,7 @@ TEST_CASES = [
         "name": "Mapped read single end",
         "format": "sam",
         "output_subdir": "16",
-        "generator_func": "sam_bam_generators.generate_sam_04",
+        "generator_func": "sam_bam_generators.generate_sam_16",
         "params": {},
         "description": "Single-end mapped reads with different orientations",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -174,7 +174,7 @@ TEST_CASES = [
         "name": "Mapped read pair - same position + TLEN",
         "format": "sam",
         "output_subdir": "17",
-        "generator_func": "sam_bam_generators.generate_sam_05",
+        "generator_func": "sam_bam_generators.generate_sam_17",
         "params": {},
         "description": "Paired-end reads mapped to same position with template length",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -184,7 +184,7 @@ TEST_CASES = [
         "name": "Mapped read pair – enclosed + TLEN",
         "format": "sam",
         "output_subdir": "18",
-        "generator_func": "sam_bam_generators.generate_sam_06",
+        "generator_func": "sam_bam_generators.generate_sam_18",
         "params": {},
         "description": "Paired reads where one read encloses the other",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -194,7 +194,7 @@ TEST_CASES = [
         "name": "Mapped read pair – overlapping + TLEN",
         "format": "sam",
         "output_subdir": "19",
-        "generator_func": "sam_bam_generators.generate_sam_07",
+        "generator_func": "sam_bam_generators.generate_sam_19",
         "params": {},
         "description": "Paired reads with overlapping alignment",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -204,7 +204,7 @@ TEST_CASES = [
         "name": "Mapped read pair – no overlapping + TLEN",
         "format": "sam",
         "output_subdir": "20",
-        "generator_func": "sam_bam_generators.generate_sam_08",
+        "generator_func": "sam_bam_generators.generate_sam_20",
         "params": {},
         "description": "Paired reads with no overlap between mates",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -214,7 +214,7 @@ TEST_CASES = [
         "name": "Mapped read pair – long distance + TLEN",
         "format": "sam",
         "output_subdir": "21",
-        "generator_func": "sam_bam_generators.generate_sam_09",
+        "generator_func": "sam_bam_generators.generate_sam_21",
         "params": {"special_reference": "large_ref.fa"},
         "description": "Paired reads mapped far apart (>1M bases)",
         "output_files": ["alignment.sam", "large_ref.fa"]
@@ -224,7 +224,7 @@ TEST_CASES = [
         "name": "Mapped read pair – different reference + TLEN",
         "format": "sam",
         "output_subdir": "22",
-        "generator_func": "sam_bam_generators.generate_sam_10",
+        "generator_func": "sam_bam_generators.generate_sam_22",
         "params": {},
         "description": "Paired reads mapped to different reference sequences",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -234,7 +234,7 @@ TEST_CASES = [
         "name": "Secondary alignment",
         "format": "sam",
         "output_subdir": "23",
-        "generator_func": "sam_bam_generators.generate_sam_11",
+        "generator_func": "sam_bam_generators.generate_sam_23",
         "params": {},
         "description": "Read with primary and secondary alignments",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -244,7 +244,7 @@ TEST_CASES = [
         "name": "Supplementary / chimeric alignment",
         "format": "sam",
         "output_subdir": "24",
-        "generator_func": "sam_bam_generators.generate_sam_12",
+        "generator_func": "sam_bam_generators.generate_sam_24",
         "params": {},
         "description": "Chimeric read with supplementary alignments",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -550,104 +550,4 @@ TEST_CASES = [
         "output_files": ["alignment.sam", "simple_ref.fa"]
     },
 
-    {
-        "id": "03",
-        "name": "Paired End - both mates same length",
-        "format": "fastq",
-        "output_subdir": "03",
-        "generator_func": "fastq_generators.generate_fastq_03",
-        "params": {},
-        "description": "Paired-end reads where both mates have same length",
-        "output_files": ["reads_1.fastq", "reads_2.fastq"]
-    },
-    {
-        "id": "04",
-        "name": "Paired End - mates different length",
-        "format": "fastq", 
-        "output_subdir": "04",
-        "generator_func": "fastq_generators.generate_fastq_04",
-        "params": {},
-        "description": "Paired-end reads with different lengths per mate",
-        "output_files": ["reads_1.fastq", "reads_2.fastq"]
-    },
-    {
-        "id": "05",
-        "name": "GZIP compressed input",
-        "format": "fastq",
-        "output_subdir": "05",
-        "generator_func": "fastq_generators.generate_fastq_05",
-        "params": {},
-        "description": "FASTQ input compressed with gzip",
-        "output_files": ["reads.fastq.gz"]
-    },
-    {
-        "id": "06",
-        "name": "GZIP compressed output",
-        "format": "fastq",
-        "output_subdir": "06",
-        "generator_func": "fastq_generators.generate_fastq_06",
-        "params": {},
-        "description": "Test tool's ability to output gzipped FASTQ",
-        "output_files": ["reads.fastq"]
-    },
-    {
-        "id": "07",
-        "name": "Paired End - different read names", 
-        "format": "fastq",
-        "output_subdir": "07",
-        "generator_func": "fastq_generators.generate_fastq_07",
-        "params": {},
-        "description": "Paired-end files with non-matching read names",
-        "output_files": ["reads_1.fastq", "reads_2.fastq"]
-    },
-    {
-        "id": "08",
-        "name": "Full quality score range",
-        "format": "fastq",
-        "output_subdir": "08",
-        "generator_func": "fastq_generators.generate_fastq_08",
-        "params": {},
-        "description": "All valid Phred+33 quality scores",
-        "output_files": ["reads.fastq"]
-    },
-    {
-        "id": "09",
-        "name": "ACGT nucleotide only",
-        "format": "fastq",
-        "output_subdir": "09",
-        "generator_func": "fastq_generators.generate_fastq_09",
-        "params": {},
-        "description": "Reads containing only ACGT bases",
-        "output_files": ["reads.fastq"]
-    },
-    {
-        "id": "10",
-        "name": "IUPAC ambiguity codes",
-        "format": "fastq",
-        "output_subdir": "10",
-        "generator_func": "fastq_generators.generate_fastq_10",
-        "params": {},
-        "description": "Reads with IUPAC ambiguity characters",
-        "output_files": ["reads.fastq"]
-    },
-    {
-        "id": "11",
-        "name": "Special read name characters",
-        "format": "fastq",
-        "output_subdir": "11",
-        "generator_func": "fastq_generators.generate_fastq_11",
-        "params": {},
-        "description": "Read names with special characters",
-        "output_files": ["reads.fastq"]
-    },
-    {
-        "id": "12",
-        "name": "Paired End - unequal file lengths",
-        "format": "fastq",
-        "output_subdir": "12",
-        "generator_func": "fastq_generators.generate_fastq_12",
-        "params": {},
-        "description": "Paired-end files with unequal numbers of reads",
-        "output_files": ["reads_1.fastq", "reads_2.fastq"]
-    }
 ]
