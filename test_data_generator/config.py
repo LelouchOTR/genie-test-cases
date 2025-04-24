@@ -6,10 +6,9 @@ BASE_OUTPUT_DIR = Path("test_data")
 
 # Test case configurations
 TEST_CASES = [
-    # === FASTQ Test Cases ===
     {
         "id": "01",
-        "name": "Single End - constant read length",
+        "name": "Single End - constant read length", 
         "format": "fastq",
         "output_subdir": "01",
         "generator_func": "fastq_generators.generate_fastq_01",
@@ -551,27 +550,6 @@ TEST_CASES = [
         "output_files": ["alignment.sam", "simple_ref.fa"]
     },
 
-    # === FASTQ Test Cases 1-12 ===
-    {
-        "id": "1",
-        "name": "Single End - constant read length",
-        "format": "fastq",
-        "output_subdir": "1",
-        "generator_func": "fastq_generators.generate_fastq_01",
-        "params": {},
-        "description": "Single-end reads with consistent length",
-        "output_files": ["reads.fastq"]
-    },
-    {
-        "id": "FASTQ_02",
-        "name": "Single End - variable read length",
-        "format": "fastq",
-        "output_subdir": "FASTQ_02",
-        "generator_func": "fastq_generators.generate_fastq_02",
-        "params": {},
-        "description": "Single-end reads with varying lengths",
-        "output_files": ["reads.fastq"]
-    },
     {
         "id": "FASTQ_03",
         "name": "Paired End - both mates same length",

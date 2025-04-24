@@ -28,7 +28,7 @@ def main():
             # Update progress bar description with current case
             pbar.set_description(f"{Fore.WHITE}Processing {case_id}")
             
-            output_dir = base_output_path / case_config['format'] / case_config['output_subdir']
+            output_dir = base_output_path / case_config['output_subdir']
             utils.ensure_dir(output_dir)
 
             try:
