@@ -167,7 +167,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_16",
         "params": {},
         "description": "Single-end mapped reads with different orientations",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "17",
@@ -177,7 +177,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_17",
         "params": {},
         "description": "Paired-end reads mapped to same position with template length",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "18",
@@ -187,7 +187,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_18",
         "params": {},
         "description": "Paired reads where one read encloses the other",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "19",
@@ -197,7 +197,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_19",
         "params": {},
         "description": "Paired reads with overlapping alignment",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "20",
@@ -207,7 +207,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_20",
         "params": {},
         "description": "Paired reads with no overlap between mates",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "21",
@@ -227,7 +227,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_22",
         "params": {},
         "description": "Paired reads mapped to different reference sequences",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "23",
@@ -237,7 +237,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_23",
         "params": {},
         "description": "Read with primary and secondary alignments",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "24",
@@ -247,7 +247,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_24",
         "params": {},
         "description": "Chimeric read with supplementary alignments",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "25",
@@ -257,7 +257,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_25",
         "params": {},
         "description": "Read with M, =, X in CIGAR string",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "26",
@@ -267,7 +267,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_26",
         "params": {},
         "description": "Read with I in CIGAR string",
-        "output_files": ["alignment.sam", "simple_ref.fa"]
+        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
     },
     {
         "id": "27",
@@ -367,7 +367,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_36",
         "params": {"special_reference": "large_ref.fa"},
         "description": "Reads with mates mapped far apart",
-        "output_files": ["alignment.sam", "large_ref.fa"]
+        "output_files": ["alignment.sam", "large_ref.fa", "large_ref.fa.fai"]
     },
     {
         "id": "37",
@@ -477,7 +477,7 @@ TEST_CASES = [
         "generator_func": "sam_bam_generators.generate_sam_47",
         "params": {"special_reference": "large_ref.fa"},
         "description": "Pairs with reverse flags and large separation",
-        "output_files": ["alignment.sam", "large_ref.fa"]
+        "output_files": ["alignment.sam", "large_ref.fa", "large_ref.fa.fai"]
     },
     {
         "id": "48",

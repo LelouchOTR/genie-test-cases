@@ -48,8 +48,6 @@ def main():
                     params = case_config.get('params', {})
                     generator_func(output_dir, **params)
                     
-                    # Write README after successful generation
-                    utils.write_readme(output_dir, case_config)
                     success_count += 1
                 else:
                     error_count += 1
