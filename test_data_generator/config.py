@@ -137,7 +137,7 @@ TEST_CASES = [
         "params": {"special_reference": "large_ref.fa"},
         "description": "Single-end unmapped read with basic flags",
         "notes": "Verify handling of unmapped reads",
-        "output_files": ["alignment.sam", "simple_ref.fa", "simple_ref.fa.fai"]
+        "output_files": ["alignment.sam"]
     },
     {
         "id": "14",
