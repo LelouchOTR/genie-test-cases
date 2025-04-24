@@ -1781,7 +1781,7 @@ def generate_sam_51(output_dir: Path, **kwargs):
 
     # Use 'wb' mode for BAM output
     with pysam.AlignmentFile(str(file_path), "wb", header=header) as bamfile:
-        # Add a simple mapped read (similar to generate_sam_04)
+        # Add a simple mapped read (similar to generate_sam_16)
         r1 = pysam.AlignedSegment()
         r1.query_name = "bam_input_read_1"
         with pysam.FastaFile(str(ref_path)) as fasta:
@@ -1813,8 +1813,8 @@ def generate_sam_52(output_dir: Path, **kwargs):
     """SAM_52: (bam output) - Generate SAM input for testing BAM output"""
     # This case expects the *tool under test* to produce bam output.
     # So we provide a standard sam file as input. Reference also needed.
-    # Reuse SAM_04 generator.
-    generate_sam_04(output_dir, **kwargs)
+    # Reuse SAM_16 generator.
+    generate_sam_16(output_dir, **kwargs)
 
 def generate_sam_53(output_dir: Path, **kwargs):
     """SAM_53: (cram input) - Generate CRAM"""
@@ -1859,7 +1859,7 @@ def generate_sam_53(output_dir: Path, **kwargs):
 
     # Use 'wc' mode for CRAM output with direct filesystem reference path
     with pysam.AlignmentFile(str(file_path), "wc", header=header, reference_filename=str(ref_path)) as cramfile:
-        # Add a simple mapped read (similar to generate_sam_04)
+        # Add a simple mapped read (similar to generate_sam_16)
         r1 = pysam.AlignedSegment()
         r1.query_name = "cram_input_read_1"
         r1.query_sequence = seq_r1
@@ -1888,4 +1888,4 @@ def generate_sam_54(output_dir: Path, **kwargs):
     # This case expects the *tool under test* to produce cram output.
     # So we just provide a standard sam file as input. Reference also needed.
     # Reuse SAM_04 generator.
-    generate_sam_04(output_dir, **kwargs)
+    generate_sam_16(output_dir, **kwargs)
