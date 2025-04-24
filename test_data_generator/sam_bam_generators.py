@@ -48,8 +48,8 @@ def set_mate_info(segment: pysam.AlignedSegment, header: pysam.AlignmentHeader,
 
 # === SAM/BAM/CRAM Generators ===
 
-def generate_sam_01(output_dir: Path, **kwargs):
-    """SAM_01: Unmapped read – single end"""
+def generate_sam_13(output_dir: Path, **kwargs):
+    """SAM_13: Unmapped read – single end"""
     file_path = output_dir / "alignment.sam"
     header = utils.get_default_sam_header()
 
@@ -64,8 +64,8 @@ def generate_sam_01(output_dir: Path, **kwargs):
         samfile.write(a)
 
 
-def generate_sam_02(output_dir: Path, **kwargs):
-    """SAM_02: Unmapped pair"""
+def generate_sam_14(output_dir: Path, **kwargs):
+    """SAM_14: Unmapped pair"""
     file_path = output_dir / "alignment.sam"
     header = utils.get_default_sam_header()
 

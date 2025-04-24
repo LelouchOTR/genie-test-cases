@@ -128,12 +128,13 @@ TEST_CASES = [
         "output_files": ["reads_1.fastq", "reads_2.fastq"]
     },
     # === SAM/BAM Test Cases ===
+    # === SAM/BAM/CRAM Test Cases 13-54 ===
     {
         "id": "13",
         "name": "Unmapped read - single end",
         "format": "sam",
         "output_subdir": "13",
-        "generator_func": "sam_bam_generators.generate_sam_01",
+        "generator_func": "sam_bam_generators.generate_sam_13",
         "params": {"special_reference": "large_ref.fa"},
         "description": "Single-end unmapped read with basic flags",
         "notes": "Verify handling of unmapped reads",
@@ -550,12 +551,12 @@ TEST_CASES = [
         "output_files": ["alignment.sam", "simple_ref.fa"]
     },
 
-    # === FASTQ Test Cases ===
+    # === FASTQ Test Cases 1-12 ===
     {
-        "id": "FASTQ_01",
+        "id": "1",
         "name": "Single End - constant read length",
         "format": "fastq",
-        "output_subdir": "FASTQ_01",
+        "output_subdir": "1",
         "generator_func": "fastq_generators.generate_fastq_01",
         "params": {},
         "description": "Single-end reads with consistent length",

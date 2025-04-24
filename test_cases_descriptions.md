@@ -2,7 +2,7 @@
 
 | Test # | Test                                  | Description                                                                                              |
 | :----: | :------------------------------------ | :------------------------------------------------------------------------------------------------------- |
-| 01     | Single End – constant read length     | Three reads in a single fastq file with constant read length.                                            |
+| 1      | Single End – constant read length     | Three reads in a single fastq file with constant read length.                                            |
 | 02     | Single End – variable read length     | Three reads in a single fastq file with the second read having a different length than the other two.    |
 | 03     | Paired End - both mates same length   | Two paired fastq files with three reads in each file. The read length is constant for all reads.         |
 | 04     | Paired End - mates different length   | Two paired fastq files with three reads in each file. The read length is constant in each file but different between the files. |
