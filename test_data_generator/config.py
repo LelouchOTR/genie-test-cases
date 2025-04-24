@@ -254,7 +254,7 @@ TEST_CASES = [
         "name": "Base substitution (M, =, X)",
         "format": "sam",
         "output_subdir": "25",
-        "generator_func": "sam_bam_generators.generate_sam_13",
+        "generator_func": "sam_bam_generators.generate_sam_25",
         "params": {},
         "description": "Read with M, =, X in CIGAR string",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -264,7 +264,7 @@ TEST_CASES = [
         "name": "Base insertion",
         "format": "sam",
         "output_subdir": "26",
-        "generator_func": "sam_bam_generators.generate_sam_14",
+        "generator_func": "sam_bam_generators.generate_sam_26",
         "params": {},
         "description": "Read with I in CIGAR string",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -274,7 +274,7 @@ TEST_CASES = [
         "name": "Base deletion",
         "format": "sam",
         "output_subdir": "27",
-        "generator_func": "sam_bam_generators.generate_sam_15",
+        "generator_func": "sam_bam_generators.generate_sam_27",
         "params": {},
         "description": "Read with D in CIGAR string",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -284,7 +284,7 @@ TEST_CASES = [
         "name": "Softclips",
         "format": "sam",
         "output_subdir": "28",
-        "generator_func": "sam_bam_generators.generate_sam_16",
+        "generator_func": "sam_bam_generators.generate_sam_28",
         "params": {},
         "description": "Read with S in CIGAR string",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -294,7 +294,7 @@ TEST_CASES = [
         "name": "Padding (P)",
         "format": "sam",
         "output_subdir": "29",
-        "generator_func": "sam_bam_generators.generate_sam_17",
+        "generator_func": "sam_bam_generators.generate_sam_29",
         "params": {},
         "description": "Read with P in CIGAR string",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -304,7 +304,7 @@ TEST_CASES = [
         "name": "Hardclips",
         "format": "sam",
         "output_subdir": "30",
-        "generator_func": "sam_bam_generators.generate_sam_18",
+        "generator_func": "sam_bam_generators.generate_sam_30",
         "params": {},
         "description": "Read with H in CIGAR string",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -314,7 +314,7 @@ TEST_CASES = [
         "name": "PCR duplicate flag",
         "format": "sam",
         "output_subdir": "31",
-        "generator_func": "sam_bam_generators.generate_sam_19",
+        "generator_func": "sam_bam_generators.generate_sam_31",
         "params": {},
         "description": "Reads with different PCR duplicate flag values",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -324,7 +324,7 @@ TEST_CASES = [
         "name": "Paired end – different flags per mate",
         "format": "sam",
         "output_subdir": "32",
-        "generator_func": "sam_bam_generators.generate_sam_20",
+        "generator_func": "sam_bam_generators.generate_sam_32",
         "params": {},
         "description": "Pairs with different flag combinations per mate",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -334,7 +334,7 @@ TEST_CASES = [
         "name": "next read … flags – unmapped",
         "format": "sam",
         "output_subdir": "33",
-        "generator_func": "sam_bam_generators.generate_sam_21",
+        "generator_func": "sam_bam_generators.generate_sam_33",
         "params": {},
         "description": "Unmapped read with mate flags set",
         "output_files": ["alignment.sam"]
@@ -344,7 +344,7 @@ TEST_CASES = [
         "name": "next read … flags – half mapped",
         "format": "sam",
         "output_subdir": "34",
-        "generator_func": "sam_bam_generators.generate_sam_22",
+        "generator_func": "sam_bam_generators.generate_sam_34",
         "params": {},
         "description": "Mapped read with unmapped mate flags",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -354,7 +354,7 @@ TEST_CASES = [
         "name": "next read … flags – short distance",
         "format": "sam",
         "output_subdir": "35",
-        "generator_func": "sam_bam_generators.generate_sam_23",
+        "generator_func": "sam_bam_generators.generate_sam_35",
         "params": {},
         "description": "Properly paired reads with nearby mates",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -364,7 +364,7 @@ TEST_CASES = [
         "name": "next read … flags – long distance",
         "format": "sam",
         "output_subdir": "36",
-        "generator_func": "sam_bam_generators.generate_sam_24",
+        "generator_func": "sam_bam_generators.generate_sam_36",
         "params": {"special_reference": "large_ref.fa"},
         "description": "Reads with mates mapped far apart",
         "output_files": ["alignment.sam", "large_ref.fa"]
@@ -374,7 +374,7 @@ TEST_CASES = [
         "name": "Short intron / splice (N)",
         "format": "sam",
         "output_subdir": "37",
-        "generator_func": "sam_bam_generators.generate_sam_25",
+        "generator_func": "sam_bam_generators.generate_sam_37",
         "params": {},
         "description": "Read with N cigar operator for splicing",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -384,7 +384,7 @@ TEST_CASES = [
         "name": "Long intron / splice (N)",
         "format": "sam",
         "output_subdir": "38",
-        "generator_func": "sam_bam_generators.generate_sam_26",
+        "generator_func": "sam_bam_generators.generate_sam_38",
         "params": {},
         "description": "Read with long N cigar operator",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -394,7 +394,7 @@ TEST_CASES = [
         "name": "Empty read (all bases deleted)",
         "format": "sam",
         "output_subdir": "39",
-        "generator_func": "sam_bam_generators.generate_sam_27",
+        "generator_func": "sam_bam_generators.generate_sam_39",
         "params": {},
         "description": "Read with all bases deleted (D in CIGAR)",
         "output_files": ["alignment.sam"]
@@ -404,7 +404,7 @@ TEST_CASES = [
         "name": "Empty read (all bases softclipped)",
         "format": "sam",
         "output_subdir": "40",
-        "generator_func": "sam_bam_generators.generate_sam_28",
+        "generator_func": "sam_bam_generators.generate_sam_40",
         "params": {},
         "description": "Read with all bases softclipped (S in CIGAR)",
         "output_files": ["alignment.sam"]
@@ -414,7 +414,7 @@ TEST_CASES = [
         "name": "Empty read (all bases hardclipped)",
         "format": "sam",
         "output_subdir": "41",
-        "generator_func": "sam_bam_generators.generate_sam_29",
+        "generator_func": "sam_bam_generators.generate_sam_41",
         "params": {},
         "description": "Read with all bases hardclipped (H in CIGAR)",
         "output_files": ["alignment.sam"]
@@ -424,7 +424,7 @@ TEST_CASES = [
         "name": "Empty read (no nucleotides in read / * in sam)",
         "format": "sam",
         "output_subdir": "42",
-        "generator_func": "sam_bam_generators.generate_sam_30",
+        "generator_func": "sam_bam_generators.generate_sam_42",
         "params": {},
         "description": "Read with SEQ and QUAL set to '*'",
         "output_files": ["alignment.sam"]
@@ -434,7 +434,7 @@ TEST_CASES = [
         "name": "Quality scores absent",
         "format": "sam",
         "output_subdir": "43",
-        "generator_func": "sam_bam_generators.generate_sam_31",
+        "generator_func": "sam_bam_generators.generate_sam_43",
         "params": {},
         "description": "Read with QUAL set to '*'",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -444,7 +444,7 @@ TEST_CASES = [
         "name": "Optional tags",
         "format": "sam",
         "output_subdir": "44",
-        "generator_func": "sam_bam_generators.generate_sam_32",
+        "generator_func": "sam_bam_generators.generate_sam_44",
         "params": {},
         "description": "Read with various optional tags",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -454,7 +454,7 @@ TEST_CASES = [
         "name": "Read groups",
         "format": "sam",
         "output_subdir": "45",
-        "generator_func": "sam_bam_generators.generate_sam_33",
+        "generator_func": "sam_bam_generators.generate_sam_45",
         "params": {},
         "description": "Reads with different read group tags",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -464,7 +464,7 @@ TEST_CASES = [
         "name": "Reverse Complement (different + same) – short distance",
         "format": "sam",
         "output_subdir": "46",
-        "generator_func": "sam_bam_generators.generate_sam_34",
+        "generator_func": "sam_bam_generators.generate_sam_46",
         "params": {},
         "description": "Pairs with different reverse complement flag combinations",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -474,7 +474,7 @@ TEST_CASES = [
         "name": "Reverse Complement (different + same) – long distance",
         "format": "sam",
         "output_subdir": "47",
-        "generator_func": "sam_bam_generators.generate_sam_35",
+        "generator_func": "sam_bam_generators.generate_sam_47",
         "params": {"special_reference": "large_ref.fa"},
         "description": "Pairs with reverse flags and large separation",
         "output_files": ["alignment.sam", "large_ref.fa"]
@@ -484,7 +484,7 @@ TEST_CASES = [
         "name": "Reverse Complement (different + same) – unmapped",
         "format": "sam",
         "output_subdir": "48",
-        "generator_func": "sam_bam_generators.generate_sam_36",
+        "generator_func": "sam_bam_generators.generate_sam_48",
         "params": {},
         "description": "Unmapped pairs with different reverse flags",
         "output_files": ["alignment.sam"]
@@ -494,7 +494,7 @@ TEST_CASES = [
         "name": "Reverse Complement (different + same) – half mapped",
         "format": "sam",
         "output_subdir": "49",
-        "generator_func": "sam_bam_generators.generate_sam_37",
+        "generator_func": "sam_bam_generators.generate_sam_49",
         "params": {},
         "description": "Half-mapped pairs with different reverse flags",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -504,7 +504,7 @@ TEST_CASES = [
         "name": "Circular reference",
         "format": "sam",
         "output_subdir": "50",
-        "generator_func": "sam_bam_generators.generate_sam_38",
+        "generator_func": "sam_bam_generators.generate_sam_50",
         "params": {},
         "description": "Read overlapping circular reference boundary",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -514,7 +514,7 @@ TEST_CASES = [
         "name": "(BAM input) - Generate BAM",
         "format": "bam",
         "output_subdir": "51",
-        "generator_func": "sam_bam_generators.generate_sam_39",
+        "generator_func": "sam_bam_generators.generate_sam_51",
         "params": {},
         "description": "Basic BAM file generation",
         "output_files": ["alignment.bam", "simple_ref.fa"]
@@ -524,7 +524,7 @@ TEST_CASES = [
         "name": "(BAM output) - Generate SAM",
         "format": "sam",
         "output_subdir": "52",
-        "generator_func": "sam_bam_generators.generate_sam_40",
+        "generator_func": "sam_bam_generators.generate_sam_52",
         "params": {},
         "description": "Test BAM output capability",
         "output_files": ["alignment.sam", "simple_ref.fa"]
@@ -534,7 +534,7 @@ TEST_CASES = [
         "name": "(CRAM input) - Generate CRAM",
         "format": "cram",
         "output_subdir": "53",
-        "generator_func": "sam_bam_generators.generate_sam_41",
+        "generator_func": "sam_bam_generators.generate_sam_53",
         "params": {},
         "description": "Basic CRAM file generation",
         "output_files": ["alignment.cram", "simple_ref.fa"]
@@ -544,7 +544,7 @@ TEST_CASES = [
         "name": "(CRAM output) - Generate SAM",
         "format": "sam",
         "output_subdir": "54",
-        "generator_func": "sam_bam_generators.generate_sam_42",
+        "generator_func": "sam_bam_generators.generate_sam_54",
         "params": {},
         "description": "Test CRAM output capability",
         "output_files": ["alignment.sam", "simple_ref.fa"]
