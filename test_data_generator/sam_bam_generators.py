@@ -119,8 +119,8 @@ def generate_sam_14(output_dir: Path, **kwargs):
         samfile.write(r2)
 
 
-def generate_sam_03(output_dir: Path, **kwargs):
-    """SAM_03: Half-mapped read pair"""
+def generate_sam_15(output_dir: Path, **kwargs):
+    """SAM_15: Half-mapped read pair"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)  # Use default simple_ref.fa
     header = utils.get_default_sam_header()
@@ -215,8 +215,8 @@ mate_is_reverse=False)
         samfile.write(r2)
 
 
-def generate_sam_04(output_dir: Path, **kwargs):
-    """SAM_04: Mapped read single end"""
+def generate_sam_16(output_dir: Path, **kwargs):
+    """SAM_16: Mapped read single end"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -266,8 +266,8 @@ def generate_sam_04(output_dir: Path, **kwargs):
         samfile.write(r3)
 
 
-def generate_sam_05(output_dir: Path, **kwargs):
-    """SAM_05: Mapped read pair – same position + TLEN"""
+def generate_sam_17(output_dir: Path, **kwargs):
+    """SAM_17: Mapped read pair – same position + TLEN"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -314,8 +314,8 @@ mate_is_reverse=False)
         samfile.write(r2)
 
 
-def generate_sam_06(output_dir: Path, **kwargs):
-    """SAM_06: Mapped read pair – enclosed + TLEN"""
+def generate_sam_18(output_dir: Path, **kwargs):
+    """SAM_18: Mapped read pair – enclosed + TLEN"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -365,8 +365,8 @@ def generate_sam_06(output_dir: Path, **kwargs):
         samfile.write(r2)
 
 
-def generate_sam_07(output_dir: Path, **kwargs):
-    """SAM_07: Mapped read pair – overlapping + TLEN"""
+def generate_sam_19(output_dir: Path, **kwargs):
+    """SAM_19: Mapped read pair – overlapping + TLEN"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -417,8 +417,8 @@ mate_is_reverse=False)
         samfile.write(r2)
 
 
-def generate_sam_08(output_dir: Path, **kwargs):
-    """SAM_08: Mapped read pair – no overlapping + TLEN"""
+def generate_sam_20(output_dir: Path, **kwargs):
+    """SAM_20: Mapped read pair – no overlapping + TLEN"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -466,8 +466,8 @@ mate_is_reverse=False)
         samfile.write(r2)
 
 
-def generate_sam_09(output_dir: Path, **kwargs):
-    """SAM_09: Mapped read pair - long distance + TLEN (>1M bases)"""
+def generate_sam_21(output_dir: Path, **kwargs):
+    """SAM_21: Mapped read pair - long distance + TLEN (>1M bases)"""
     file_path = output_dir / "alignment.sam"
     utils.ensure_reference_exists("large_ref.fa")
     ref_path = utils.copy_reference_to_output(output_dir, ref_name="large_ref.fa")
@@ -517,8 +517,8 @@ def generate_sam_09(output_dir: Path, **kwargs):
         samfile.write(r1)
         samfile.write(r2)
 
-def generate_sam_10(output_dir: Path, **kwargs):
-    """SAM_10: Mapped read pair – different reference + TLEN"""
+def generate_sam_22(output_dir: Path, **kwargs):
+    """SAM_22: Mapped read pair – different reference + TLEN"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -568,8 +568,8 @@ mate_is_reverse=False)
         samfile.write(r2)
 
 
-def generate_sam_11(output_dir: Path, **kwargs):
-    """SAM_11: Secondary alignment"""
+def generate_sam_23(output_dir: Path, **kwargs):
+    """SAM_23: Secondary alignment"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -620,8 +620,8 @@ def generate_sam_11(output_dir: Path, **kwargs):
         samfile.write(s2)
 
 
-def generate_sam_12(output_dir: Path, **kwargs):
-    """SAM_12: Supplementary / chimeric alignment"""
+def generate_sam_24(output_dir: Path, **kwargs):
+    """SAM_24: Supplementary / chimeric alignment"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -669,8 +669,8 @@ def generate_sam_12(output_dir: Path, **kwargs):
         samfile.write(s1)
 
 
-def generate_sam_13(output_dir: Path, **kwargs):
-    """SAM_13: Base substitution (M, =, X)"""
+def generate_sam_25(output_dir: Path, **kwargs):
+    """SAM_25: Base substitution (M, =, X)"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -720,8 +720,8 @@ def generate_sam_13(output_dir: Path, **kwargs):
         samfile.write(r2)
 
 
-def generate_sam_14(output_dir: Path, **kwargs):
-    """SAM_14: Base insertion"""
+def generate_sam_26(output_dir: Path, **kwargs):
+    """SAM_26: Base insertion"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -747,8 +747,8 @@ def generate_sam_14(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_15(output_dir: Path, **kwargs):
-    """SAM_15: Base deletion"""
+def generate_sam_27(output_dir: Path, **kwargs):
+    """SAM_27: Base deletion"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -774,8 +774,8 @@ def generate_sam_15(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_16(output_dir: Path, **kwargs):
-    """SAM_16: Softclips"""
+def generate_sam_28(output_dir: Path, **kwargs):
+    """SAM_28: Softclips"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -825,8 +825,8 @@ def generate_sam_16(output_dir: Path, **kwargs):
         samfile.write(r3)
 
 
-def generate_sam_17(output_dir: Path, **kwargs):
-    """SAM_17: Padding (P)"""
+def generate_sam_29(output_dir: Path, **kwargs):
+    """SAM_29: Padding (P)"""
     # Padding is rare in mapping, more common in multiple alignments.
     # It consumes neither read nor reference.
     file_path = output_dir / "alignment.sam"
@@ -853,8 +853,8 @@ def generate_sam_17(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_18(output_dir: Path, **kwargs):
-    """SAM_18: Hardclips"""
+def generate_sam_30(output_dir: Path, **kwargs):
+    """SAM_30: Hardclips"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -904,8 +904,8 @@ def generate_sam_18(output_dir: Path, **kwargs):
         samfile.write(r3)
 
 
-def generate_sam_19(output_dir: Path, **kwargs):
-    """SAM_19: PCR duplicate flag"""
+def generate_sam_31(output_dir: Path, **kwargs):
+    """SAM_31: PCR duplicate flag"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -973,8 +973,8 @@ mate_is_reverse=False)
         samfile.write(r3_2)
 
 
-def generate_sam_20(output_dir: Path, **kwargs):
-    """SAM_20: Paired end – different flags per mate"""
+def generate_sam_32(output_dir: Path, **kwargs):
+    """SAM_32: Paired end – different flags per mate"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -1058,8 +1058,8 @@ mate_is_reverse=False)
         samfile.write(r2)
 
 
-def generate_sam_21(output_dir: Path, **kwargs):
-    """SAM_21: next read … flags – unmapped"""
+def generate_sam_33(output_dir: Path, **kwargs):
+    """SAM_33: next read … flags – unmapped"""
     # Assumption: Show an unmapped read where mate flags are set (e.g., mate unmapped)
     file_path = output_dir / "alignment.sam"
     header = utils.get_default_sam_header()
@@ -1079,8 +1079,8 @@ def generate_sam_21(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_22(output_dir: Path, **kwargs):
-    """SAM_22: next read … flags – half mapped"""
+def generate_sam_34(output_dir: Path, **kwargs):
+    """SAM_34: next read … flags – half mapped"""
     # Assumption: Show a mapped read where mate flags indicate mate is unmapped.
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
@@ -1107,8 +1107,8 @@ def generate_sam_22(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_23(output_dir: Path, **kwargs):
-    """SAM_23: next read … flags – short distance"""
+def generate_sam_35(output_dir: Path, **kwargs):
+    """SAM_35: next read … flags – short distance"""
     # Assumption: Show a mapped read where mate flags indicate mate is mapped nearby.
     # This is essentially a standard proper pair, focusing on the mate flags.
     file_path = output_dir / "alignment.sam"
@@ -1162,8 +1162,8 @@ def generate_sam_23(output_dir: Path, **kwargs):
         samfile.write(r2)
 
 
-def generate_sam_24(output_dir: Path, **kwargs):
-    """SAM_24: next read … flags – long distance"""
+def generate_sam_36(output_dir: Path, **kwargs):
+    """SAM_36: next read … flags – long distance"""
     """SAM_24: next read … flags – long distance"""
     # Assumption: Show a mapped read where mate flags indicate mate is mapped far away (>1Mb).
     file_path = output_dir / "alignment.sam"
@@ -1214,8 +1214,8 @@ def generate_sam_24(output_dir: Path, **kwargs):
         # (Mate R2 not strictly needed for this test)
 
 
-def generate_sam_25(output_dir: Path, **kwargs):
-    """SAM_25: Short intron / splice (N)"""
+def generate_sam_37(output_dir: Path, **kwargs):
+    """SAM_37: Short intron / splice (N)"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -1247,8 +1247,8 @@ def generate_sam_25(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_26(output_dir: Path, **kwargs):
-    """SAM_26: Long intron / splice (N)"""
+def generate_sam_38(output_dir: Path, **kwargs):
+    """SAM_38: Long intron / splice (N)"""
     # Note: Our reference is short. We simulate a long intron skip relative
     # to the reference size, but it won't be biologically 'long'.
     file_path = output_dir / "alignment.sam"
@@ -1280,8 +1280,8 @@ def generate_sam_26(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_27(output_dir: Path, **kwargs):
-    """SAM_27: Empty read (all bases deleted)"""
+def generate_sam_39(output_dir: Path, **kwargs):
+    """SAM_39: Empty read (all bases deleted)"""
     # This is unusual. Typically implies an alignment placeholder.
     # Usually unmapped.
     file_path = output_dir / "alignment.sam"
@@ -1305,8 +1305,8 @@ def generate_sam_27(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_28(output_dir: Path, **kwargs):
-    """SAM_28: Empty read (all bases softclipped)"""
+def generate_sam_40(output_dir: Path, **kwargs):
+    """SAM_40: Empty read (all bases softclipped)"""
     # Read sequence exists but doesn't map anywhere. Usually unmapped.
     file_path = output_dir / "alignment.sam"
     header = utils.get_default_sam_header()
@@ -1325,8 +1325,8 @@ def generate_sam_28(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_29(output_dir: Path, **kwargs):
-    """SAM_29: Empty read (all bases hardclipped)"""
+def generate_sam_41(output_dir: Path, **kwargs):
+    """SAM_41: Empty read (all bases hardclipped)"""
     # Similar to all deleted, sequence is gone. Usually unmapped.
     file_path = output_dir / "alignment.sam"
     header = utils.get_default_sam_header()
@@ -1345,8 +1345,8 @@ def generate_sam_29(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_30(output_dir: Path, **kwargs):
-    """SAM_30: Empty read (no nucleotides in read / * in sam)"""
+def generate_sam_42(output_dir: Path, **kwargs):
+    """SAM_42: Empty read (no nucleotides in read / * in sam)"""
     # Explicitly setting SEQ and QUAL to '*'. Usually unmapped.
     file_path = output_dir / "alignment.sam"
     header = utils.get_default_sam_header()
@@ -1364,8 +1364,8 @@ def generate_sam_30(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_31(output_dir: Path, **kwargs):
-    """SAM_31: Quality scores absent"""
+def generate_sam_43(output_dir: Path, **kwargs):
+    """SAM_43: Quality scores absent"""
     # Sequence present, but QUAL is '*'.
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
@@ -1387,8 +1387,8 @@ def generate_sam_31(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_32(output_dir: Path, **kwargs):
-    """SAM_32: Optional tags"""
+def generate_sam_44(output_dir: Path, **kwargs):
+    """SAM_44: Optional tags"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -1423,8 +1423,8 @@ def generate_sam_32(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_33(output_dir: Path, **kwargs):
-    """SAM_33: Read groups"""
+def generate_sam_45(output_dir: Path, **kwargs):
+    """SAM_45: Read groups"""
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
     # Get base header and add RG lines
@@ -1480,8 +1480,8 @@ def generate_sam_33(output_dir: Path, **kwargs):
         samfile.write(r3)
 
 
-def generate_sam_34(output_dir: Path, **kwargs):
-    """SAM_34: Reverse Complement (different + same) – short distance"""
+def generate_sam_46(output_dir: Path, **kwargs):
+    """SAM_46: Reverse Complement (different + same) – short distance"""
     # Assumption: Show pairs where one or both reads are reverse complemented (0x10/0x20 flags)
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
@@ -1564,8 +1564,8 @@ def generate_sam_34(output_dir: Path, **kwargs):
         samfile.write(r2)
 
 
-def generate_sam_35(output_dir: Path, **kwargs):
-    """SAM_35: Reverse Complement (different + same) – long distance"""
+def generate_sam_47(output_dir: Path, **kwargs):
+    """SAM_47: Reverse Complement (different + same) – long distance"""
     """SAM_35: Reverse Complement (different + same) – long distance"""
     # Assumption: Similar to SAM_34 but with large separation (>1Mb)
     file_path = output_dir / "alignment.sam"
@@ -1618,8 +1618,8 @@ def generate_sam_35(output_dir: Path, **kwargs):
         # (Can add other revcomp pairs like RF, FF if needed for long distance test)
 
 
-def generate_sam_36(output_dir: Path, **kwargs):
-    """SAM_36: Reverse Complement (different + same) – unmapped"""
+def generate_sam_48(output_dir: Path, **kwargs):
+    """SAM_48: Reverse Complement (different + same) – unmapped"""
     # Assumption: Show unmapped pairs with different reverse flag combinations.
     file_path = output_dir / "alignment.sam"
     header = utils.get_default_sam_header()
@@ -1669,8 +1669,8 @@ def generate_sam_36(output_dir: Path, **kwargs):
         samfile.write(r2)
 
 
-def generate_sam_37(output_dir: Path, **kwargs):
-    """SAM_37: Reverse Complement (different + same) – half mapped"""
+def generate_sam_49(output_dir: Path, **kwargs):
+    """SAM_49: Reverse Complement (different + same) – half mapped"""
     # Assumption: Show half-mapped pairs with different reverse flag combinations.
     file_path = output_dir / "alignment.sam"
     ref_path = utils.copy_reference_to_output(output_dir)
@@ -1735,8 +1735,8 @@ def generate_sam_37(output_dir: Path, **kwargs):
         samfile.write(r2)
 
 
-def generate_sam_38(output_dir: Path, **kwargs):
-    """SAM_38: Circular reference"""
+def generate_sam_50(output_dir: Path, **kwargs):
+    """SAM_50: Circular reference"""
     # This requires the aligner to handle circularity. We simulate a read
     # that *could* wrap around if the reference were circular.
     # Pysam itself doesn't enforce circularity; the test tool would need to.
@@ -1770,8 +1770,8 @@ def generate_sam_38(output_dir: Path, **kwargs):
         samfile.write(r1)
 
 
-def generate_sam_39(output_dir: Path, **kwargs):
-    """SAM_39: (bam input) - Generate BAM"""
+def generate_sam_51(output_dir: Path, **kwargs):
+    """SAM_51: (bam input) - Generate BAM"""
     file_path = output_dir / "alignment.bam" # Output BAM
     ref_path = utils.copy_reference_to_output(output_dir)
     header = utils.get_default_sam_header()
@@ -1809,15 +1809,15 @@ def generate_sam_39(output_dir: Path, **kwargs):
         bamfile.write(r2)
 
 
-def generate_sam_40(output_dir: Path, **kwargs):
-    """SAM_40: (bam output) - Generate SAM input for testing BAM output"""
+def generate_sam_52(output_dir: Path, **kwargs):
+    """SAM_52: (bam output) - Generate SAM input for testing BAM output"""
     # This case expects the *tool under test* to produce bam output.
     # So we provide a standard sam file as input. Reference also needed.
     # Reuse SAM_04 generator.
     generate_sam_04(output_dir, **kwargs)
 
-def generate_sam_41(output_dir: Path, **kwargs):
-    """SAM_41: (cram input) - Generate CRAM"""
+def generate_sam_53(output_dir: Path, **kwargs):
+    """SAM_53: (cram input) - Generate CRAM"""
     file_path = output_dir / "alignment.cram" # Output CRAM
     # Copy reference to output dir and use that path for CRAM generation
     ref_path = utils.copy_reference_to_output(output_dir, ref_name="simple_ref.fa")
@@ -1883,8 +1883,8 @@ def generate_sam_41(output_dir: Path, **kwargs):
         cramfile.write(r2)
 
 
-def generate_sam_42(output_dir: Path, **kwargs):
-    """SAM_42: (cram output) - Generate SAM"""
+def generate_sam_54(output_dir: Path, **kwargs):
+    """SAM_54: (cram output) - Generate SAM"""
     # This case expects the *tool under test* to produce cram output.
     # So we just provide a standard sam file as input. Reference also needed.
     # Reuse SAM_04 generator.
